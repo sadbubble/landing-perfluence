@@ -1,0 +1,10 @@
+{
+  "description": "This landing page enables users to easily apply for home internet and TV services from Kazakhtelecom, offering a user-friendly interface and clear information.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

@@ -1,0 +1,1320 @@
+/*
+ * Helvetica Neue из гайда заказчика — подключается файлами, а не системой:
+ * в macOS и iOS она есть, в Windows и Android нет.
+ *
+ * Файлы урезаны до нужных символов (латиница, полная кириллица с казахскими
+ * буквами, пунктуация, ₸) и переведены в woff2: четыре начертания весят
+ * 146 КБ вместо 6,4 МБ исходных .otf. Исходники лежат в assets-src/fonts/
+ * и в сборку не попадают.
+ *
+ * Внешних шрифтовых сервисов на странице больше нет: лендинг поедет на
+ * сервер Казахтелекома, и лишняя зависимость от чужого домена там ни к чему.
+ */
+@font-face {
+  font-family: 'Helvetica Neue Web';
+  src: url('/fonts/HelveticaNeue-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Helvetica Neue Web';
+  src: url('/fonts/HelveticaNeue-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Helvetica Neue Web';
+  src: url('/fonts/HelveticaNeue-700.woff2') format('woff2');
+  /* 600 отдаём этому же файлу: отдельного полужирного в наборе нет,
+     иначе браузер синтезировал бы его сам и портил форму букв. */
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Helvetica Neue Web';
+  src: url('/fonts/HelveticaNeue-800.woff2') format('woff2');
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+@import 'tailwindcss';
+
+:root {
+  /*
+   * Палитра из гайда заказчика (for landing.pdf):
+   *   #008EFF — основной, #00D9FF и #0044BC — дополнительные для градиентов.
+   *
+   * Важно: с белым текстом основной #008EFF даёт контраст 3.33 при норме
+   * 4.5, поэтому он используется как акцент, обводка и подложка, а под
+   * белый текст идёт глубокий #0044BC (8.23). Это не отступление от гайда:
+   * оба цвета из него.
+   */
+  --brand:        #008EFF;   /* основной: акценты, иконки, обводки */
+  --brand-strong: #0044BC;   /* заливка под белым текстом: кнопки */
+  --brand-dark:   #003A9E;   /* наведение на такой заливке */
+  --brand-light:  #00D9FF;   /* верхняя точка градиентов, декор */
+  --brand-soft:   #E5F3FF;   /* мягкая подложка секций */
+
+  --ink:          #0A2540;
+  --ink-muted:    #5A6B7D;
+  --surface:      #FFFFFF;
+  --bg:           #F4F8FC;
+  --radius:       16px;
+  --shadow-sm:    0 2px 8px rgba(10,37,64,0.06);
+  --shadow-md:    0 4px 20px rgba(10,37,64,0.10);
+  --danger:       #D0342C;
+  --line:         #DCE6F0;
+  --success:      #1F9254;
+  --footer-bg:    #0A2540;
+  --footer-ink:   #FFFFFF;
+  --on-brand:     #FFFFFF;
+  /* Тёмный текст на ярких фирменных заливках (шапки карточек) */
+  --on-brand-light: #0A2540;
+  --hero-image:   url('/hero.jpg');
+  --hero-veil:    #0044BC;
+  --cta-image:    url('/cta-banner.jpg');
+  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* =======================================================================
+ * ВАРИАНТЫ ОФОРМЛЕНИЯ
+ *
+ * Руководитель попросил уйти от «казахтелекомовского» вида: лендинг
+ * делается для ТОО «Perfluence», а не для самого оператора. Ниже три
+ * альтернативные палитры. Переключаются атрибутом data-theme на <html>,
+ * вся вёрстка при этом не меняется — она работает только через токены.
+ *
+ * Обязательная плашка об официальном партнёрстве остаётся во всех
+ * вариантах: это требование ТЗ п.3, а не элемент оформления.
+ * ======================================================================= */
+
+/* Тёплый сервис — человечный, «бытовой», без корпоративного холода. */
+[data-theme="warm"] {
+  --brand:        #C2410C;
+  --brand-dark:   #9A3412;
+  --brand-soft:   #FDEEE4;
+  --ink:          #2A1F1A;
+  --ink-muted:    #6B5A50;
+  --surface:      #FFFFFF;
+  --bg:           #FBF7F2;
+  --line:         #EADFD4;
+  --danger:       #B91C1C;
+  --success:      #15803D;
+  --footer-bg:    #2A1F1A;
+  --footer-ink:   #FFF7F0;
+  --on-brand:     #FFFFFF;
+  --hero-veil:    #5A2A12;
+  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
+     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
+     на контраст и смотрится цельно. */
+  --hero-image:   none;
+  --radius:       20px;
+  --shadow-sm:    0 2px 8px rgba(42,31,26,0.06);
+  --shadow-md:    0 6px 24px rgba(42,31,26,0.10);
+  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Тёмный премиум — контрастный, «технологичный», хорошо смотрится в сторис. */
+[data-theme="night"] {
+  --brand:        #6C8CFF;
+  /* В тёмной теме «тёмный» оттенок бренда наоборот светлее: он работает
+     и как ховер кнопки, и как текст на подложке --brand-soft. */
+  --brand-dark:   #9AAEFF;
+  --brand-soft:   #1B2333;
+  --ink:          #E9EEF5;
+  --ink-muted:    #94A3B8;
+  --surface:      #161C26;
+  --bg:           #0D1117;
+  --line:         #263041;
+  --danger:       #FF7A70;
+  --success:      #4ADE80;
+  --footer-bg:    #080B10;
+  --footer-ink:   #E9EEF5;
+  /* На ярком акценте тёмной темы белый текст нечитаем — берём тёмный. */
+  --on-brand:     #0D1117;
+  --hero-veil:    #0A1020;
+  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
+     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
+     на контраст и смотрится цельно. */
+  --hero-image:   none;
+  --radius:       14px;
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.40);
+  --shadow-md:    0 8px 28px rgba(0,0,0,0.55);
+  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Строгий минимал — монохром, чёрные кнопки, мелкие скругления. */
+[data-theme="minimal"] {
+  --brand:        #111827;
+  --brand-dark:   #000000;
+  --brand-soft:   #F2F2F0;
+  --ink:          #0B0F14;
+  --ink-muted:    #55606B;
+  --surface:      #FFFFFF;
+  --bg:           #F6F6F4;
+  --line:         #E3E3E0;
+  --danger:       #B42318;
+  --success:      #15803D;
+  --footer-bg:    #0B0F14;
+  --footer-ink:   #FFFFFF;
+  --on-brand:     #FFFFFF;
+  --hero-veil:    #14181F;
+  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
+     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
+     на контраст и смотрится цельно. */
+  --hero-image:   none;
+  --radius:       8px;
+  --shadow-sm:    0 1px 2px rgba(11,15,20,0.05);
+  --shadow-md:    0 2px 8px rgba(11,15,20,0.07);
+  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c1cdd6; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+/* Honeypot field - visually hidden, NOT display:none */
+.visually-hidden-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* =======================================================================
+ * Ниже — служебные экраны: панель сотрудников и текстовые страницы.
+ * Лендинг их не использует; токены :root общие, поэтому смена фирменного
+ * стиля меняет и лендинг, и админку одновременно.
+ * ======================================================================= */
+
+/* --- Админка ------------------------------------------------------------ */
+
+.adm { max-width: 1400px; margin: 0 auto; padding: 24px 20px 64px; }
+
+.adm-top {
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap; margin-bottom: 20px;
+}
+.adm-top h1 { font-size: 22px; margin: 0; }
+.adm-top .spacer { flex: 1; }
+.adm-user { color: var(--ink-muted); font-size: 14px; }
+
+.adm-tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+.adm-tab {
+  padding: 9px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--ink-muted); font: inherit;
+}
+.adm-tab[aria-selected="true"] { background: var(--brand); color: #fff; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+}
+
+.filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 12px; color: var(--ink-muted); }
+
+input, select, textarea, button { font: inherit; }
+input, select, textarea {
+  padding: 9px 11px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface); color: var(--ink);
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand);
+}
+
+.btn {
+  padding: 10px 18px; border: 0; border-radius: 10px; cursor: pointer;
+  background: var(--brand); color: #fff; font-weight: 600;
+}
+.btn:hover:not(:disabled) { background: var(--brand-dark); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--brand); border: 1px solid var(--line); }
+.btn-ghost:hover:not(:disabled) { background: var(--brand-soft); color: var(--brand-dark); }
+.btn-sm { padding: 6px 12px; font-size: 13px; font-weight: 500; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-muted); white-space: nowrap; }
+tbody tr:hover { background: var(--brand-soft); }
+td.nowrap, th.nowrap { white-space: nowrap; }
+
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+.st-new        { background: #e8effa; color: #23508f; }
+.st-in_progress{ background: #fff3d6; color: #8a6300; }
+.st-sale       { background: #e2f5ea; color: var(--success); }
+.st-refused    { background: #fbe6e6; color: var(--danger); }
+.st-no_answer  { background: #eef0f2; color: var(--ink-muted); }
+.st-duplicate  { background: #f0e9fb; color: #6b46c1; }
+
+.stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 20px; min-width: 130px; }
+.stat b { display: block; font-size: 26px; line-height: 1.2; }
+.stat span { font-size: 13px; color: var(--ink-muted); }
+
+.muted { color: var(--ink-muted); }
+.error { color: var(--danger); }
+.empty { padding: 40px; text-align: center; color: var(--ink-muted); }
+
+/* --- Экран входа -------------------------------------------------------- */
+
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login-card { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.login-card h1 { font-size: 20px; margin: 0 0 4px; }
+.login-card .field { margin-top: 16px; }
+.login-card input { width: 100%; }
+.login-card .btn { width: 100%; margin-top: 20px; }
+
+/* --- Текстовые страницы (политика ПДн) ---------------------------------- */
+
+.doc {
+  max-width: 720px; margin: 0 auto; padding: 32px 20px 72px;
+  background: var(--surface); min-height: 100vh;
+}
+.doc-back { display: inline-block; margin-bottom: 24px; color: var(--brand); text-decoration: none; }
+.doc-back:hover { color: var(--brand-dark); text-decoration: underline; }
+.doc h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+.doc h2 { font-size: 17px; margin: 28px 0 8px; }
+.doc-meta { font-size: 13px; margin: 0 0 24px; }
+.doc-intro { padding: 14px 16px; background: var(--brand-soft); border-radius: var(--radius); }
+.doc p { margin: 0 0 12px; }
+
+
+/* =======================================================================
+ * БАННЕР НА ПЕРВЫЙ ЭКРАН
+ *
+ * Текст баннера всегда светлый: под ним либо фотография, либо тёмный
+ * градиент. Поэтому здесь не используются --ink и --on-brand — они
+ * привязаны к светлому фону страницы и на баннере дали бы нечитаемое.
+ * ======================================================================= */
+
+.hero {
+  position: relative;
+  /* svh, а не vh: на мобильных vh считается по развёрнутому окну, и низ
+     баннера вместе с кнопкой уезжает под адресную строку браузера. */
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  /* Когда фотографии нет, баннер держится на этом градиенте: от светлого
+     края вуали к глубокому. Оттенок тот же, что у вуали, поэтому с фото
+     и без него баннер выглядит одинаково. */
+  /* Градиент из фирменных синих: основной сверху, глубокий снизу */
+  background: linear-gradient(150deg,
+              var(--brand) 0%,
+              color-mix(in srgb, var(--brand) 45%, var(--brand-strong)) 45%,
+              var(--brand-strong) 100%);
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--hero-image);
+  background-size: cover;
+  background-position: center;
+}
+/*
+ * На телефоне фотографию не показываем совсем.
+ *
+ * Кадр 21:9 в вертикальном окне обрезается до узкой полосы, куда попадает
+ * только ровный градиент без предметов — то есть ровно то, что и так
+ * рисует подложка. Взамен получали растяжение в 3.6 раза (заметное мыло)
+ * и лишние килобайты на первом экране мобильного интернета.
+ */
+@media (max-width: 899px) {
+  .hero-photo { display: none; }
+}
+
+/*
+ * Затемнение под текстом баннера.
+ *
+ * На мобильном текст занимает всю ширину, поэтому затемнение равномерное:
+ * градиент слева направо оставлял бы правый край строки на светлом участке
+ * фотографии — при светлом снимке контраст падал до 2.75 при норме 4.5.
+ * Горизонтальный вариант включается только с 900px, где текст реально
+ * занимает левую половину и справа видно фотографию.
+ */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /*
+   * Плотность подобрана по самой картинке, а не «на всякий случай».
+   * Кадр слева тёмный, поэтому 35% достаточно: измеренный минимум для
+   * белого текста в этой зоне — 26%. Прежние 84% простогасили картинку.
+   */
+  background:
+    linear-gradient(to top,
+      color-mix(in srgb, var(--hero-veil) 45%, transparent) 0%,
+      color-mix(in srgb, var(--hero-veil) 35%, transparent) 55%,
+      color-mix(in srgb, var(--hero-veil) 30%, transparent) 100%);
+}
+@media (min-width: 900px) {
+  /* На широком экране текст занимает левые ~60%, поэтому справа вуаль
+     можно ослабить и показать фотографию. Плотность в левой зоне не
+     опускается ниже 84% — там проходит порог для мелкого текста. */
+  .hero-scrim {
+    background:
+      linear-gradient(to right,
+        color-mix(in srgb, var(--hero-veil) 38%, transparent) 0%,
+        color-mix(in srgb, var(--hero-veil) 32%, transparent) 48%,
+        transparent 68%),
+      linear-gradient(to top, color-mix(in srgb, var(--hero-veil) 22%, transparent) 0%, transparent 40%);
+  }
+}
+
+.hero-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0.65;
+}
+
+.hero-inner {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Отступы сжимаются на невысоких экранах, иначе баннер перерастает окно */
+  padding: clamp(76px, 11svh, 96px) 20px clamp(48px, 10svh, 88px);
+  display: flex;
+  align-items: center;
+}
+/* Фигуры справа больше нет — колонка одна, текст не растягиваем на всю
+   ширину, иначе строки становятся нечитаемо длинными на мониторе. */
+
+/*
+ * Ширина колонки продиктована картинкой: правее 45% ширины кадр светлеет,
+ * и белый текст там перестаёт читаться без плотной вуали. 480px удерживают
+ * текст в тёмной зоне на всех ширинах вплоть до 1920px.
+ */
+.hero-copy { max-width: 480px; }
+
+.hero-title {
+  max-width: 15ch;
+  margin: 0 0 18px;
+  /*
+   * Кегль ограничен и по высоте окна, а не только по ширине. На широком,
+   * но невысоком экране (Windows со 125% масштабом даёт около 1360x625)
+   * заголовок в 56px занимал четыре строки, и низ баннера уезжал за экран.
+   */
+  font-size: min(clamp(32px, 5vw, 56px), 8.5svh);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  text-wrap: balance;
+}
+
+.hero-subtitle {
+  max-width: 46ch;
+  margin: 0 0 clamp(20px, 3.5svh, 32px);
+  font-size: min(clamp(16px, 2.2vw, 20px), 2.6svh);
+  line-height: 1.6;
+  color: rgba(255,255,255,0.82);
+}
+
+/*
+ * Ширину блока кнопок не ограничиваем отдельно: колонка .hero-copy уже
+ * задаёт предел. Прежние 46ch давали 409px, а двум кнопкам нужно 417 —
+ * они переносились в столбик и добавляли баннеру ~70px высоты на ровном
+ * месте. Разница была всего в восемь пикселей.
+ */
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.hero-btn {
+  min-height: 54px;
+  padding: 16px 32px;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.hero-btn:hover { transform: translateY(-1px); }
+
+.hero-btn-primary { border: none; background: #FFFFFF; color: #0B1420; }
+.hero-btn-primary:hover { background: rgba(255,255,255,0.88); }
+
+.hero-btn-ghost {
+  background: rgba(255,255,255,0.08);
+  color: #FFFFFF;
+  border: 1.5px solid rgba(255,255,255,0.45);
+}
+.hero-btn-ghost:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.75); }
+
+.hero-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin: clamp(18px, 4svh, 36px) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 46ch;
+}
+.hero-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+}
+.hero-highlights svg { color: var(--brand-light); flex-shrink: 0; }
+
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: #FFFFFF;
+  cursor: pointer;
+  animation: hero-bob 2.2s ease-in-out infinite;
+}
+@keyframes hero-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(5px); }
+}
+/* Не дёргаем страницу у тех, кто просил уменьшить анимацию */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll { animation: none; }
+  .hero-btn:hover { transform: none; }
+}
+@media (max-height: 640px) {
+  .hero-scroll { display: none; }
+}
+
+/* На телефоне вторая кнопка лишняя: до тарифов ведёт стрелка внизу. */
+@media (max-width: 899px) {
+  .hero-btn-ghost { display: none; }
+}
+
+/* =======================================================================
+ * СЕКЦИЯ ПРЕИМУЩЕСТВ
+ * ======================================================================= */
+
+.benefits { padding: 80px 20px; }
+.benefits-inner { max-width: 1200px; margin: 0 auto; }
+.benefits-head { max-width: 640px; margin: 0 auto 44px; text-align: center; }
+.benefits-head h2 {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.benefits-head p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink-muted); }
+
+/*
+ * Карточек две. Сетку ограничиваем по ширине: растянутые на все 1200px
+ * они выглядели бы полупустыми, а строка текста стала бы нечитаемо длинной.
+ */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+@media (min-width: 720px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.benefit {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 24px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.benefit:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+.benefit h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
+.benefit p  { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-muted); }
+
+
+/* =======================================================================
+ * КАРТОЧКИ ТАРИФОВ
+ *
+ * По макету заказчика: белая карточка, всё по центру, цветных шапок нет.
+ * Карточки различает не заливка, а цена — она здесь самый крупный элемент.
+ * Заодно это ближе к гайду, который задаёт один синий род на весь лендинг.
+ * ======================================================================= */
+
+.tcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  padding: 30px 22px 24px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.tcard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+}
+
+/* Рекомендуемый: синяя рамка и плашка на верхнем крае. Раньше выделение
+   было еле заметным — теперь его видно с одного взгляда. */
+.tcard.is-popular {
+  border-color: var(--brand);
+  border-width: 2px;
+  box-shadow: 0 6px 26px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.tcard-pill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tcard-name {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--brand-strong);
+  letter-spacing: -0.01em;
+}
+
+.tcard-headline {
+  margin: 0 0 18px;
+  font-size: 15px;
+  color: var(--ink-muted);
+}
+.tcard-headline b { color: var(--ink); font-weight: 700; }
+
+.tcard-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  color: var(--ink);
+  animation: price-swap 0.28s ease-out;
+}
+.tcard-price-num {
+  font-size: clamp(32px, 3.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.tcard-price-cur { font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; }
+@keyframes price-swap {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tcard-per {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.tcard-saving {
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tcard-caption {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* Низ карточки прижат к одной линии во всём ряду */
+.tcard-foot { margin-top: auto; width: 100%; padding-top: 20px; }
+
+.tcard-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--ink-muted);
+  /* Запас на две строки: подписи разной длины, и без него кнопки в ряду
+     разъезжаются по высоте, как только одна из них переносится. */
+  min-height: 2.9em;
+}
+.tcard-note svg { flex-shrink: 0; opacity: 0.7; }
+
+.tcard-extra {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.tcard-btn {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.tcard-btn:hover { background: var(--brand-dark); }
+
+/* =======================================================================
+ * ШАПКА
+ *
+ * Плавающая: не занимает места в потоке, поэтому баннер начинается от
+ * самого верха окна и заполняет его целиком. Над баннером шапка прозрачная
+ * — иначе белая полоса упирается в тёмный баннер и режет его жёстким швом.
+ * ======================================================================= */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.site-header.is-solid {
+  background: var(--surface);
+  border-bottom-color: color-mix(in srgb, var(--ink) 7%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-header-home {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  /* Знак 40px сам по себе ниже минимальной цели для пальца — добираем
+     вертикальным отступом, ширина строки шапки при этом не меняется. */
+  min-height: 44px;
+  padding: 2px 0;
+}
+
+/* --- Переключатель языка ------------------------------------------------ */
+
+.lang-switch {
+  display: flex;
+  gap: 2px;
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+  /* Над баннером — полупрозрачная подложка, на белой шапке — обычная */
+  background: rgba(255, 255, 255, 0.16);
+  transition: background 0.25s ease;
+}
+.is-solid .lang-switch { background: var(--bg); }
+
+.lang-btn {
+  /* 44px — минимальная цель для пальца. Визуально плашка остаётся
+     компактной: подложку активного языка задаёт padding. */
+  min-height: 44px;
+  min-width: 44px;
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.lang-btn.is-active {
+  background: #FFFFFF;
+  color: #0B1420;
+  cursor: default;
+}
+.is-solid .lang-btn { color: var(--ink-muted); }
+.is-solid .lang-btn.is-active { background: var(--brand-strong); color: var(--on-brand); }
+
+
+/* =======================================================================
+ * СЕКЦИЯ ТАРИФОВ
+ * ======================================================================= */
+
+.tariffs {
+  padding: 80px 20px;
+  background: color-mix(in srgb, var(--brand-soft) 70%, transparent);
+}
+.tariffs-inner { max-width: 1200px; margin: 0 auto; }
+.tariffs-head { max-width: 680px; margin: 0 auto 40px; text-align: center; }
+.tariffs-head h2 {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.tariffs-head > p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink-muted); }
+
+.tariffs-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding-top: 12px; }
+@media (min-width: 600px)  { .tariffs-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .tariffs-grid { grid-template-columns: repeat(4, 1fr); } }
+/* Обёртка для анимации не должна ломать выравнивание карточек по высоте */
+.tariffs-grid > .reveal { display: flex; }
+.tariffs-grid > .reveal > * { width: 100%; }
+
+/* --- Переключатель цены -------------------------------------------------- */
+
+.price-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin: 26px auto 8px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.price-toggle-btn {
+  min-height: 44px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.price-toggle-btn.is-active {
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  cursor: default;
+}
+.price-toggle-hint { margin: 0; font-size: 13px; color: var(--ink-muted); }
+
+/* --- Цена в карточке ----------------------------------------------------- */
+
+.tcard-price-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+
+.tcard-price {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  /* Перерисовка по key: без неё подмена суммы проходит незаметно */
+  animation: price-swap 0.28s ease-out;
+}
+.tcard-price-unit { font-size: 14px; font-weight: 600; color: var(--ink-muted); }
+@keyframes price-swap {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tcard-saving {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tcard-price-caption {
+  margin: 5px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+.tcard-price-details { margin: 6px 0 0; }
+
+.tcard-foot .tcard-btn { margin-top: 16px; }
+
+/* =======================================================================
+ * ПОЯВЛЕНИЕ ПРИ ПРОКРУТКЕ
+ *
+ * Блоки выезжают снизу, когда доходят до экрана. Начальное состояние
+ * задаётся только при включённом JS (класс js-reveal на <html>): иначе при
+ * отключённом скрипте страница осталась бы пустой.
+ * ======================================================================= */
+
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+  .tcard-price { animation: none; }
+}
+
+
+/* --- Крупные цифры в преимуществах -------------------------------------- */
+
+.benefit-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.benefit-figure { text-align: right; line-height: 1.05; }
+.benefit-figure-value {
+  display: block;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  /* Яркий #008EFF на белом даёт 3.33 — для цифры такого кегля формально
+     хватает, но глубокий синий читается увереннее и держит иерархию. */
+  color: var(--brand-strong);
+}
+.benefit-figure-unit {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+/* Карточка с цифрой чуть заметнее соседних — иначе цифры теряются в ряду */
+.benefit-metric { border-color: color-mix(in srgb, var(--brand) 28%, var(--line)); }
+
+/* Обёртка шага не должна ломать раскладку карточки внутри сетки */
+.steps-grid > .reveal > * { width: 100%; }
+
+
+/* --- Иллюстрация в карточке преимущества -------------------------------- */
+
+/* Объёмная иконка. Размер крупнее нарисованной: у неё внутри свой фон
+   и воздух, при 48px рисунок в ней становится неразличим. */
+.benefit-art {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+/* =======================================================================
+ * «КАК ПОДКЛЮЧИТЬ»
+ *
+ * Оформление намеренно другое, чем в «Преимуществах»: там квадратные
+ * разноцветные плитки слева от текста и карточка с рамкой, здесь —
+ * круглый медальон по центру, один синий тон и никакой подложки. Если
+ * повторить приём один в один, две соседние секции сливаются в длинную
+ * ленту одинаковых карточек, и шаги перестают читаться как шаги.
+ * ======================================================================= */
+
+.step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 12px 0;
+}
+
+.step-art-wrap { position: relative; margin-bottom: 18px; }
+
+.step-art {
+  width: 120px;
+  height: 120px;
+  /* Заливки нет: у картинки собственное свечение, фирменный круг под ней
+     проступал бы вторым кольцом с жёстким краем. */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Пока картинки нет, рисуем круг сами — композиция не разъезжается */
+.step-art-empty {
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--brand) 8%, var(--surface));
+}
+
+/* Номер сидит на медальоне: он и порядок задаёт, и связывает круг
+   с фирменным цветом, которого в самой картинке немного. */
+.step-num {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  font-size: 16px;
+  font-weight: 800;
+  border: 3px solid var(--surface);
+}
+
+.step-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.step-text {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+/* Пунктир между шагами: тянется от медальона к следующему. В колонке
+   (узкий экран) он бы вёл вбок в пустоту, поэтому только от 768px. */
+.step-link { display: none; }
+@media (min-width: 768px) {
+  .step-link {
+    display: block;
+    position: absolute;
+    top: 60px;
+    left: calc(50% + 76px);
+    right: calc(-50% + 76px);
+    height: 2px;
+    background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--brand) 45%, transparent) 0 8px,
+      transparent 8px 16px
+    );
+    background-size: 16px 2px;
+    background-repeat: repeat-x;
+  }
+}
+
+
+
+
+/* Бейдж нерекомендуемой карточки: не плашка на краю, а спокойный чип */
+.tcard-chip {
+  margin: -4px 0 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+
+/*
+ * Кнопка к форме в шапке: появляется, когда баннер уехал вверх.
+ *
+ * Короткой подписи для узких экранов здесь больше нет. Она понадобилась,
+ * когда в шапке стоял логотип: логотип 143px + кнопка 134px + языки 100px
+ * не помещались в 375px. Логотип убрали — место освободилось, и подпись
+ * снова одна.
+ */
+.header-cta {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  animation: header-cta-in 0.18s ease-out;
+}
+.header-cta:hover { background: var(--brand-dark); }
+@keyframes header-cta-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .header-cta { animation: none; } }
+@media (max-width: 420px) {
+  .header-cta { padding: 9px 14px; font-size: 13px; }
+}
+
+
+/* Совсем низкие окна: убираем то, что дублируется ниже по странице */
+@media (max-height: 620px) and (min-width: 900px) {
+  .hero-highlights { display: none; }
+}
+
+
+/*
+ * Секция «Как подключить».
+ *
+ * Подложка снизу растворяется в фоне страницы. Раньше она обрывалась
+ * жёсткой горизонтальной линией, а сразу под ней начинался синий баннер —
+ * два резких стыка подряд, и переход выглядел грязно.
+ */
+.how {
+  padding: 72px 20px 88px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface) 75%, transparent) 0%,
+    color-mix(in srgb, var(--surface) 75%, transparent) 70%,
+    transparent 100%
+  );
+}
+
+/* =======================================================================
+ * НИЖНИЙ БАННЕР
+ *
+ * По примерам из гайда: сплошная фирменная синева, крупный заголовок с
+ * жёлтой подсветкой ключевого слова, белые «пилюли» с цифрами, кнопка.
+ * ======================================================================= */
+
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  /* Сверху крупный воздух: баннер должен читаться как отдельный блок,
+     а не как продолжение предыдущей секции. */
+  margin: clamp(56px, 8vw, 96px) 20px 64px;
+  padding: clamp(28px, 3.5vw, 38px) clamp(24px, 5vw, 56px);
+  border-radius: 28px;
+  /*
+   * Три слоя сверху вниз: вуаль, фотография, запасной градиент.
+   *
+   * Вуаль неравномерная — плотная в середине и почти прозрачная у краёв.
+   * Причина в замерах: заголовок дотягивается до 0.70 ширины, где кадр
+   * подрезан заливкой cover и начинается свечение справа; там белый текст
+   * давал 3.94 при норме 4.5. Равномерная вуаль лечила это только с 35%,
+   * заметно глуша картинку. Такая даёт 4.55, а над домом остаётся 14% —
+   * дом и фигуры сохраняют яркость.
+   *
+   * Нижний градиент — запасной вариант, если файл не загрузится.
+   */
+  background-image:
+    linear-gradient(to right,
+      color-mix(in srgb, var(--brand-strong) 8%, transparent) 0%,
+      color-mix(in srgb, var(--brand-strong) 40%, transparent) 22%,
+      color-mix(in srgb, var(--brand-strong) 40%, transparent) 78%,
+      color-mix(in srgb, var(--brand-strong) 8%, transparent) 100%),
+    var(--cta-image),
+    linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
+  background-size: cover, cover, cover;
+  /*
+   * Кадр прижат к низу, а не по центру. Баннер стал вдвое ниже картинки
+   * (4.6:1 против 3:1), и при центрировании яркое свечение из верхней
+   * части кадра попадало ровно на строку заголовка — контраст падал до
+   * 3.81. Снизу кадр темнее: те же строки дают 4.81, причём с более
+   * слабой вуалью, так что дом слева виден лучше, чем раньше.
+   */
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+/*
+ * На телефоне картинка не показывается: кадр 3:1 в узкой колонке
+ * обрезается до полосы, где не остаётся ни дома, ни фигур — только
+ * градиент, который и так рисуется кодом, резко и без лишнего веса.
+ */
+@media (max-width: 720px) {
+  .cta-banner {
+    background-image: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
+  }
+}
+@media (min-width: 1240px) {
+  .cta-banner { max-width: 1200px; margin-inline: auto; }
+}
+
+.cta-art { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
+
+/* Узкая колонка держит заголовок в тёмной середине кадра */
+.cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+
+.cta-title {
+  margin: 0 0 22px;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  text-wrap: balance;
+}
+
+/*
+ * Жёлтая подсветка ключевого слова — приём из баннеров оператора
+ * («ОТБАСЫ ҮШІН», «БӘРІ ҚОСЫЛҒАН»). Жёлтого нет в списке цветов гайда,
+ * но он есть во всех трёх присланных примерах. Текст на нём тёмный:
+ * белый по жёлтому нечитаем.
+ */
+.cta-accent {
+  display: inline-block;
+  padding: 2px 14px;
+  border-radius: 10px;
+  background: #FFE14D;
+  color: #0A2540;
+}
+
+
+.cta-btn {
+  min-height: 48px;
+  padding: 13px 32px;
+  border: none;
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: var(--brand-strong);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.cta-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.9); }
+@media (prefers-reduced-motion: reduce) { .cta-btn:hover { transform: none; } }
+
+/* Чисто белая, без прозрачности: на 85% контраст падал до 3.62 даже под
+   вуалью — иерархию здесь держит кегль, а не приглушённость. */
+.cta-note { margin: 10px 0 0; font-size: 13.5px; color: #FFFFFF; }
+
+/* =======================================================================
+ * МОДАЛЬНОЕ ОКНО С ФОРМОЙ
+ * ======================================================================= */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background: rgba(10, 37, 64, 0.55);
+  animation: modal-fade 0.16s ease-out;
+}
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: auto;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(10,37,64,0.28);
+  animation: modal-rise 0.2s ease-out;
+}
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-panel { animation: none; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.modal-close:hover { background: var(--bg); color: var(--ink); }
+
+/* Заголовок формы не должен налезать на крестик */
+.leadform h2 { padding-right: 44px; }

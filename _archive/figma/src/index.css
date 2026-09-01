@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --brand:        #00A3AD;
+  --brand-dark:   #007F87;
+  --brand-soft:   #E6F6F7;
+  --ink:          #12263A;
+  --ink-muted:    #5A6C7D;
+  --surface:      #FFFFFF;
+  --bg:           #F5F8FA;
+  --radius:       16px;
+  --shadow-sm:    0 2px 8px rgba(18,38,58,0.06);
+  --shadow-md:    0 4px 20px rgba(18,38,58,0.10);
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c1cdd6; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+/* Honeypot field - visually hidden, NOT display:none */
+.visually-hidden-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
