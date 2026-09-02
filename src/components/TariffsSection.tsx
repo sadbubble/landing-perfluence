@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TariffCard, { type PriceMode } from "./TariffCard";
 import type { Tariff } from "../content/ru";
+import type { TariffSelection } from "../lib/qbox";
 
 interface TariffsSectionProps {
   title: string;
@@ -12,7 +13,7 @@ interface TariffsSectionProps {
   toggleNoContract: string;
   savingLabel: string;
   priceModeHint: string;
-  onSelect: (slug: string) => void;
+  onSelect: (sel: TariffSelection) => void;
 }
 
 /**

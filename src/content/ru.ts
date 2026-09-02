@@ -40,6 +40,7 @@ export const content = {
         contractLabel: "Контракт на 1 год",
         extra: [],
       },
+      simVariants: null,
       badge: null,
       recommended: false,
     },
@@ -56,6 +57,7 @@ export const content = {
         contractLabel: "Контракт на 1 год",
         extra: [],
       },
+      simVariants: null,
       badge: null,
       recommended: false,
     },
@@ -73,12 +75,13 @@ export const content = {
         contractLabel: null,
         extra: ["Акционная цена действует 1 год"],
       },
+      simVariants: null,
       badge: "Акция",
       recommended: true,
     },
     {
       slug: "bereket",
-      headline: "интернет + ТВ + 2 SIM",
+      headline: "интернет + ТВ + моб. связь",
       tagline: "Для семьи — всё в одном",
       name: "Bereket",
       description: null,
@@ -89,9 +92,33 @@ export const content = {
       price: {
         contract: "12 999",
         noContract: "13 999",
-        contractLabel: "Контракт на 3 года, 2 SIM",
-        extra: ["4 SIM: 16 999 ₸ с контрактом, 17 999 ₸ без"],
+        contractLabel: "Контракт на 3 года",
+        extra: [],
       },
+      simVariants: [
+        {
+          id: "2sim",
+          label: "2 SIM",
+          headline: "интернет + ТВ + 2 SIM",
+          price: {
+            contract: "12 999",
+            noContract: "13 999",
+            contractLabel: "Контракт на 3 года",
+            extra: [],
+          },
+        },
+        {
+          id: "4sim",
+          label: "4 SIM",
+          headline: "до 500 Мбит/с + TV+ Full + 4 SIM",
+          price: {
+            contract: "16 999",
+            noContract: "17 999",
+            contractLabel: "Контракт на 3 года",
+            extra: [],
+          },
+        },
+      ],
       badge: "Всё включено",
       recommended: false,
     },
@@ -203,6 +230,24 @@ export interface TariffPrice {
   extra: string[];
 }
 
+/**
+ * Вариант тарифа по числу SIM-карт — сейчас только у Bereket.
+ *
+ * Заведён не ради оформления: в Qbox девять продуктов, и четыре из них —
+ * это Bereket на 2 и 4 SIM в двух режимах цены. Пока 4 SIM был строчкой
+ * текста под ценой, лендинг физически не мог сообщить форме, что человек
+ * выбрал именно его.
+ */
+export interface SimVariant {
+  /** Совпадает с частью ключа в справочнике Qbox: «2sim» / «4sim». */
+  id: string;
+  /** Подпись на переключателе: «2 SIM». */
+  label: string;
+  /** Своя строка сути: у 4 SIM она отличается от 2 SIM. */
+  headline: string;
+  price: TariffPrice;
+}
+
 export interface Tariff {
   slug: string;
   name: string;
@@ -213,6 +258,8 @@ export interface Tariff {
   description: string | null;
   descriptionList: string[] | null;
   price: TariffPrice;
+  /** Варианты по числу SIM. null — у тарифа один вариант, переключателя нет. */
+  simVariants: SimVariant[] | null;
   badge: string | null;
   recommended: boolean;
 }

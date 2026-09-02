@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useLang } from "../hooks/useLang";
 import { useReveal } from "../hooks/useReveal";
 import { content as ru } from "../content/ru";
@@ -8,14 +8,11 @@ import Hero from "../components/Hero";
 import TariffsSection from "../components/TariffsSection";
 import HowItWorks from "../components/HowItWorks";
 import PageBackground from "../components/PageBackground";
-import LeadForm from "../components/LeadForm";
 import CtaBanner from "../components/CtaBanner";
-import Modal from "../components/Modal";
 import Footer from "../components/Footer";
-import type { FormData } from "../components/LeadForm";
 import ThemePicker from "../components/ThemePicker";
 import { captureAttribution, type Attribution } from "../lib/dealer";
-import { submitLead } from "../lib/api";
+import { buildFormUrl, resolveProduct, type TariffSelection } from "../lib/qbox";
 import { applyTheme, readTheme, isPickerEnabled, type ThemeId } from "../lib/theme";
 
 const contentMap = { ru, kk };
@@ -23,9 +20,6 @@ const contentMap = { ru, kk };
 export default function Landing() {
   const { lang, setLang } = useLang();
   const c = contentMap[lang];
-
-  const [selectedTariff, setSelectedTariff] = useState<string>("");
-  const [formOpen, setFormOpen] = useState(false);
 
   // Оформление применяется до первой отрисовки, чтобы не мигнуть исходной
   // палитрой при открытии ссылки на конкретный вариант.
@@ -40,56 +34,64 @@ export default function Landing() {
   useReveal([lang]);
 
   /**
-   * Атрибуция дилера (ТЗ п.5). Считывается один раз при монтировании и
-   * дальше не меняется: код нужен ровно в момент отправки формы, а между
-   * этими событиями пользователь мог уйти на /privacy и вернуться.
+   * Менеджер, по чьей ссылке пришёл посетитель (ТЗ п.5).
    *
-   * Держим в ref, а не в state: перерисовывать лендинг из-за этого незачем.
+   * Считывается лениво при первой отрисовке, а не в useEffect: раньше форма
+   * открывалась окном и до отправки проходили секунды, теперь же кнопка
+   * уводит на другой сайт сразу. Эффект успел бы отработать и так, но при
+   * таком сценарии зависеть от этого незачем — код нужен ровно в момент
+   * первого клика.
    */
-  const attribution = useRef<Attribution | null>(null);
-  useEffect(() => {
-    attribution.current = captureAttribution();
-  }, []);
+  const [attribution] = useState<Attribution>(() => captureAttribution());
 
   /**
-   * Форма открывается модальным окном, а не прокруткой к секции: секции с
-   * формой на странице больше нет, вместо неё нижний баннер. Фокус в первое
-   * поле ставит само окно.
+   * Уход на форму Qbox.
+   *
+   * Заявку лендинг больше не отправляет сам: человек уходит на форму Qbox,
+   * а менеджер и тариф едут туда параметрами адреса. Из-за этого отпали
+   * CORS, ключ доступа в коде страницы и обработчик на сервере КТ —
+   * подробности в src/lib/qbox.ts.
+   *
+   * Наша форма (Modal + LeadForm) из цепочки убрана, но не удалена: вопрос
+   * о том, чью форму дорабатывать, ещё открыт.
    */
+  function goToForm(product: string | null) {
+    const url = buildFormUrl(product, attribution.dealerCode);
+
+    /*
+     * Крючок для проверки привязки, только в режиме разработки — в сборку
+     * не попадает, `import.meta.env.DEV` вырезается при минификации.
+     *
+     * Без него проверить, что кнопка отправляет тот тариф, на который нажали,
+     * можно лишь уйдя на сайт Qbox — то есть потеряв страницу и вместе с ней
+     * возможность посмотреть результат. А ошибка тут самая дорогая из
+     * возможных: заявка молча уедет не на того менеджера или не с тем тарифом,
+     * и всплывёт это только при расчёте с дилерами в конце месяца.
+     */
+    if (import.meta.env.DEV) {
+      console.info("Qbox →", url);
+      const hook = (window as unknown as Record<string, unknown>).__qboxHook;
+      if (typeof hook === "function") {
+        (hook as (u: string) => void)(url);
+        return;
+      }
+    }
+
+    window.location.href = url;
+  }
+
+  /** Кнопки без тарифа: шапка, верхний баннер, нижний баннер. */
   function openForm() {
-    setFormOpen(true);
+    goToForm(null);
+  }
+
+  /** Кнопка на карточке: тариф, режим цены и число SIM уже известны. */
+  function handleTariffSelect(sel: TariffSelection) {
+    goToForm(resolveProduct(sel));
   }
 
   function scrollToTariffs() {
     document.getElementById("tariffs")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function handleTariffSelect(slug: string) {
-    setSelectedTariff(slug);
-    openForm();
-  }
-
-  /**
-   * Отправка заявки. Ошибку намеренно пробрасываем наверх: LeadForm по ней
-   * показывает сообщение и разблокирует кнопку. Проглотить её здесь значило
-   * бы показать «спасибо» на заявке, которой в базе нет.
-   */
-  async function handleSubmit(data: FormData) {
-    await submitLead(
-      {
-        phone: data.phone,
-        fullName: data.fullName,
-        address: data.address,
-        tariffSlug: data.tariff || null,
-        comment: data.comment,
-        consent: data.consent,
-        company: data.company,
-      },
-      attribution.current ?? {
-        dealerCode: null, utmSource: null, utmMedium: null, utmCampaign: null,
-      },
-      lang,
-    );
   }
 
   return (
@@ -131,7 +133,6 @@ export default function Landing() {
           onSelect={handleTariffSelect}
         />
 
-
         <HowItWorks title={c.howTitle} subtitle={c.howSubtitle} steps={c.steps} />
 
         <CtaBanner
@@ -142,40 +143,6 @@ export default function Landing() {
           onCta={openForm}
         />
       </main>
-
-      <Modal open={formOpen} onClose={() => setFormOpen(false)} closeLabel={c.closeLabel}>
-        <LeadForm
-          title={c.formTitle}
-          subtitle={c.formSubtitle}
-          labelPhone={c.labelPhone}
-          placeholderPhone={c.placeholderPhone}
-          labelName={c.labelName}
-          placeholderName={c.placeholderName}
-          labelAddress={c.labelAddress}
-          placeholderAddress={c.placeholderAddress}
-          labelTariff={c.labelTariff}
-          placeholderTariff={c.placeholderTariff}
-          labelComment={c.labelComment}
-          placeholderComment={c.placeholderComment}
-          consentText={c.consentText}
-          consentLink={c.consentLink}
-          privacyPath={c.privacyPath}
-          submitLabel={c.submitLabel}
-          submittingLabel={c.submittingLabel}
-          successTitle={c.successTitle}
-          successText={c.successText}
-          errorRequired={c.errorRequired}
-          errorPhone={c.errorPhone}
-          errorConsent={c.errorConsent}
-          errorSubmit={c.errorSubmit}
-          resetLabel={c.resetLabel}
-          chosenTariffLabel={c.chosenTariffLabel}
-          changeTariffLabel={c.changeTariffLabel}
-          tariffs={c.tariffs}
-          selectedTariffSlug={selectedTariff}
-          onSubmit={handleSubmit}
-        />
-      </Modal>
 
       {showPicker && <ThemePicker current={theme} />}
 

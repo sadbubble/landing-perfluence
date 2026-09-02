@@ -1,6 +1,8 @@
-import type { TariffPrice } from "../content/ru";
+import { useState } from "react";
+import type { TariffPrice, SimVariant } from "../content/ru";
+import type { PriceMode, TariffSelection } from "../lib/qbox";
 
-export type PriceMode = "contract" | "noContract";
+export type { PriceMode };
 
 interface TariffCardProps {
   slug: string;
@@ -8,6 +10,8 @@ interface TariffCardProps {
   tagline?: string | null;
   headline: string;
   price: TariffPrice;
+  /** Варианты по числу SIM. Есть только у Bereket, у остальных null. */
+  simVariants?: SimVariant[] | null;
   badge?: string | null;
   recommended?: boolean;
   connectLabel: string;
@@ -16,7 +20,7 @@ interface TariffCardProps {
   savingLabel: string;
   noContractLabel: string;
   mode: PriceMode;
-  onSelect: (slug: string) => void;
+  onSelect: (sel: TariffSelection) => void;
 }
 
 /** «7 249» → 7249. Нужна только для подсчёта выгоды. */
@@ -45,6 +49,11 @@ function boldNumbers(text: string) {
  * Рекомендуемый тариф выделяется синей рамкой и плашкой на верхнем крае —
  * приём из макета, заодно решает старую проблему: раньше выделение было
  * малозаметным.
+ *
+ * У Bereket добавлен второй переключатель — 2 SIM / 4 SIM. Он нужен не для
+ * красоты: в Qbox это разные продукты, и без него лендинг не мог сообщить
+ * форме, какой из них выбрали. Раньше 4 SIM был строчкой текста под ценой,
+ * нажать на неё было нельзя.
  */
 export default function TariffCard({
   slug,
@@ -52,6 +61,7 @@ export default function TariffCard({
   tagline,
   headline,
   price,
+  simVariants,
   badge,
   recommended = false,
   connectLabel,
@@ -62,11 +72,20 @@ export default function TariffCard({
   mode,
   onSelect,
 }: TariffCardProps) {
-  const hasContract = price.contract !== null;
+  const [simId, setSimId] = useState<string | null>(simVariants?.[0]?.id ?? null);
+
+  // Цена и строка сути берутся из выбранного варианта SIM, если он есть.
+  const variant = simVariants?.find((v) => v.id === simId) ?? null;
+  const activePrice = variant ? variant.price : price;
+  const activeHeadline = variant ? variant.headline : headline;
+
+  const hasContract = activePrice.contract !== null;
   const showContract = mode === "contract" && hasContract;
-  const amount = showContract ? price.contract! : price.noContract;
-  const caption = showContract ? price.contractLabel : noContractLabel;
-  const saving = hasContract ? toNumber(price.noContract) - toNumber(price.contract!) : 0;
+  const amount = showContract ? activePrice.contract! : activePrice.noContract;
+  const caption = showContract ? activePrice.contractLabel : noContractLabel;
+  const saving = hasContract
+    ? toNumber(activePrice.noContract) - toNumber(activePrice.contract!)
+    : 0;
 
   return (
     <article className={"tcard" + (recommended ? " is-popular" : "")}>
@@ -74,7 +93,23 @@ export default function TariffCard({
 
       <h3 className="tcard-name">{name}</h3>
       {badge && !recommended && <span className="tcard-chip">{badge}</span>}
-      <p className="tcard-headline">{boldNumbers(headline)}</p>
+      <p className="tcard-headline">{boldNumbers(activeHeadline)}</p>
+
+      {simVariants && simVariants.length > 1 && (
+        <div className="tcard-sim" role="group" aria-label={name}>
+          {simVariants.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              className={"tcard-sim-btn" + (v.id === simId ? " is-active" : "")}
+              aria-pressed={v.id === simId}
+              onClick={() => setSimId(v.id)}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* key заставляет цену перерисоваться при смене режима — иначе
           подмена суммы проходит незаметно. */}
@@ -91,9 +126,9 @@ export default function TariffCard({
       )}
       {caption && <p className="tcard-caption">{caption}</p>}
 
-      {price.extra.length > 0 && (
+      {activePrice.extra.length > 0 && (
         <ul className="tcard-extra">
-          {price.extra.map((d) => (
+          {activePrice.extra.map((d) => (
             <li key={d}>{d}</li>
           ))}
         </ul>
@@ -116,7 +151,10 @@ export default function TariffCard({
           </p>
         )}
 
-        <button className="tcard-btn" onClick={() => onSelect(slug)}>
+        <button
+          className="tcard-btn"
+          onClick={() => onSelect({ slug, mode, sim: simId })}
+        >
           {connectLabel}
         </button>
       </div>

@@ -653,6 +653,50 @@ td.nowrap, th.nowrap { white-space: nowrap; }
 }
 .tcard-headline b { color: var(--ink); font-weight: 700; }
 
+/*
+ * Переключатель 2 SIM / 4 SIM внутри карточки Bereket.
+ *
+ * Второй переключатель на странице — и это осознанно. В Qbox 2 SIM и 4 SIM
+ * это разные продукты с разными ценами, а до сих пор 4 SIM жил строчкой
+ * текста под ценой: нажать на неё было нельзя, и выбор до формы не доезжал.
+ *
+ * Оформлен тише секционного переключателя цен — он подчинённый и не должен
+ * спорить с ценой за внимание. Но высота всё равно 44px: правило для целей
+ * под палец в этом проекте общее и поблажек для мелких элементов не имеет.
+ */
+.tcard-sim {
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  gap: 4px;
+  margin: 0 auto 16px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  border: 1px solid var(--line);
+}
+.tcard-sim-btn {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.tcard-sim-btn.is-active {
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tcard-sim-btn { transition: none; }
+}
+
 .tcard-price {
   display: flex;
   align-items: baseline;
