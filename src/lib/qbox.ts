@@ -115,14 +115,34 @@ export function resolveProduct(sel: TariffSelection): string | null {
 }
 
 /**
- * Собирает адрес формы Qbox.
+ * Домены, которым Qbox разрешает показывать форму в рамке.
  *
- * @param product значение Product_name, либо null — для кнопок, не привязанных
- *                к тарифу (шапка, верхний и нижний баннеры). Тариф человек
- *                выберет в самой форме.
- * @param manager код менеджера или null, если человек пришёл без ссылки.
+ * Список не наш: Qbox отдаёт заголовок Content-Security-Policy с директивой
+ * frame-ancestors, и браузер блокирует рамку на любом домене вне его. Здесь
+ * перечислены только те адреса, на которых может оказаться этот лендинг.
+ *
+ * Боевой адрес из ТЗ п.5 — partner.telecom.kz — в списке Qbox уже есть,
+ * просить их ни о чём не пришлось. А витрина на Vercel там отсутствует:
+ * на ней встраивание не заработает, и включится запасной переход.
+ *
+ * localhost:8080 — порт разработки, из-за этого списка и выбранный;
+ * подробности в vite.config.ts.
  */
-export function buildFormUrl(product: string | null, manager: string | null): string {
+const EMBED_ALLOWED_ORIGINS = [
+  "https://partner.telecom.kz",
+  "https://telecom.kz",
+  "http://localhost:8080",
+  "http://localhost:4200",
+  "http://localhost:4502",
+];
+
+/** Можно ли показать форму рамкой прямо на странице. */
+export function canEmbedForm(origin: string = window.location.origin): boolean {
+  return EMBED_ALLOWED_ORIGINS.includes(origin);
+}
+
+/** Общая часть: параметры лида. Всегда идут ДО решётки. */
+function leadQuery(product: string | null, manager: string | null): string {
   const parts: string[] = [];
   const add = (key: string, value: string) =>
     // Именно encodeURIComponent, а не URLSearchParams: последний кодирует
@@ -132,8 +152,45 @@ export function buildFormUrl(product: string | null, manager: string | null): st
 
   if (manager) add(MANAGER_KEY, manager);
   if (product) for (const key of PRODUCT_KEYS) add(key, product);
+  return parts.join("&");
+}
 
-  const query = parts.join("&");
+/**
+ * Адрес формы для ПЕРЕХОДА — человек уходит на сайт Qbox.
+ *
+ * Запасной путь: используется там, где встраивание запрещено (см.
+ * canEmbedForm). Проверено настоящей заявкой: менеджер и тариф доехали.
+ *
+ * @param product значение Product_name, либо null — для кнопок, не привязанных
+ *                к тарифу (шапка, верхний и нижний баннеры). Тариф человек
+ *                выберет в самой форме.
+ * @param manager код менеджера или null, если человек пришёл без ссылки.
+ */
+export function buildFormUrl(product: string | null, manager: string | null): string {
+  const q = leadQuery(product, manager);
   // Параметры строго до «#» — иначе они попадут во фрагмент и потеряются.
-  return `${FORM_BASE}${query ? `?${query}` : ""}#/${FORM_ID}`;
+  return `${FORM_BASE}${q ? `?${q}` : ""}#/${FORM_ID}`;
+}
+
+/**
+ * Адрес формы для ВСТРАИВАНИЯ рамкой — человек остаётся на лендинге.
+ *
+ * Отличается от адреса перехода одним флагом: `embed=true`. Он идёт ВНУТРИ
+ * фрагмента, после идентификатора формы, — так его прислали из Qbox, с
+ * вкладки «Публикация → Ссылка → Iframe»:
+ *
+ *     https://qbox.telecom.kz/forms/#/<id>?embed=true
+ *
+ * Без этого флага рамка остаётся пустой белой: форма понимает, что её
+ * встроили, только по нему. На это ушло несколько неверных попыток.
+ *
+ * Параметры лида при этом остаются ДО решётки, где их работоспособность
+ * доказана настоящей заявкой. Получается адрес с двумя строками запроса —
+ * своей у страницы и своей у фрагмента, и это не опечатка:
+ *
+ *     /forms/?manager=anna&Product_name=X#/<id>?embed=true
+ */
+export function buildEmbedUrl(product: string | null, manager: string | null): string {
+  const q = leadQuery(product, manager);
+  return `${FORM_BASE}${q ? `?${q}` : ""}#/${FORM_ID}?embed=true`;
 }

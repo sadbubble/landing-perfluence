@@ -1344,12 +1344,48 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   .modal-backdrop, .modal-panel { animation: none; }
 }
 
+/*
+ * Форма Qbox, встроенная рамкой.
+ *
+ * Высота задана нами, а не Qbox: в их коде стоит height="600", но на
+ * телефоне 600px не помещаются в экран, и низ формы с кнопкой «Отправить»
+ * уезжает за край. clamp привязывает высоту к окну и держит её в разумных
+ * границах на любом устройстве. Внутри форма прокручивается сама.
+ *
+ * Заголовок наш: в самой форме его нет, а окно без единой надписи над
+ * полями выглядит так, будто открылось по ошибке.
+ */
+.qbox-title {
+  margin: 0 0 16px;
+  padding-right: 44px; /* место под крестик */
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.qbox-frame {
+  display: block;
+  width: 100%;
+  height: clamp(420px, 68svh, 620px);
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/*
+ * Крестик 44×44, а не 40: это норма для целей под палец в проекте, и здесь
+ * она особенно важна. С тех пор как в окне лежит чужая рамка, Esc его не
+ * закрывает — события клавиатуры остаются внутри формы Qbox и до нас не
+ * доходят. Крестик и клик по затемнению остались единственными способами
+ * выйти, и промахиваться по ним человек не должен.
+ */
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 40px;
-  height: 40px;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: none;
