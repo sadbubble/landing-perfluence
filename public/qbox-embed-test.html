@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Проверка встраивания формы Qbox</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 24px; background: #F4F8FC; color: #0A2540; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.lead { margin: 0 0 24px; color: #5A6B7D; }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .case { background: #fff; border: 1px solid #DCE6F0; border-radius: 12px; overflow: hidden; }
+  .case h2 { font-size: 15px; margin: 0; padding: 12px 14px; background: #E5F3FF; border-bottom: 1px solid #DCE6F0; }
+  .case code { display: block; padding: 10px 14px; font-size: 11.5px; color: #5A6B7D;
+               word-break: break-all; border-bottom: 1px solid #DCE6F0; background: #FAFCFE; }
+  .case iframe { display: block; width: 100%; height: 600px; border: 0; background: #fff; }
+  .verdict { margin: 26px 0 0; padding: 16px 18px; background: #fff;
+             border: 1px solid #DCE6F0; border-radius: 12px; }
+  .verdict li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Проверка встраивания формы Qbox</h1>
+<p class="lead">
+  Временная страница. Нужна, чтобы понять, отрисовывается ли форма Qbox
+  в рамке на стороннем домене. Открывать на <b>localhost:8080</b> — этот
+  адрес есть в списке разрешённых у Qbox, на 5173 рамка блокируется.
+</p>
+
+<div class="grid">
+
+  <div class="case">
+    <h2>1. Контроль — заведомо рабочая рамка</h2>
+    <code>https://example.com/</code>
+    <iframe src="https://example.com/" title="Контроль"></iframe>
+  </div>
+
+  <div class="case">
+    <h2>2. Код Qbox, без единого изменения</h2>
+    <code>https://qbox.telecom.kz/forms/#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true</code>
+    <iframe
+      src="https://qbox.telecom.kz/forms/#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true"
+      width="100%" height="600" frameborder="0" title="Qbox как есть"></iframe>
+  </div>
+
+  <div class="case">
+    <h2>3. Тот же код плюс менеджер и тариф</h2>
+    <code>https://qbox.telecom.kz/forms/?manager=test&amp;Product_name=Keremet%20TV%20PROMO#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true</code>
+    <iframe
+      src="https://qbox.telecom.kz/forms/?manager=test&amp;Product_name=Keremet%20TV%20PROMO#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true"
+      width="100%" height="600" frameborder="0" title="Qbox с параметрами"></iframe>
+  </div>
+
+  <div class="case">
+    <h2>4. Всё в хеше, после embed=true</h2>
+    <code>https://qbox.telecom.kz/forms/#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true&amp;manager=test&amp;Product_name=Keremet%20TV%20PROMO</code>
+    <iframe
+      src="https://qbox.telecom.kz/forms/#/7a52f500b34f49ad8fd63599e74a2ca5?embed=true&amp;manager=test&amp;Product_name=Keremet%20TV%20PROMO"
+      width="100%" height="600" frameborder="0" title="Qbox, параметры в хеше"></iframe>
+  </div>
+
+</div>
+
+<div class="verdict">
+  <b>Что мне сообщить:</b>
+  <ul>
+    <li><b>Рамка 1</b> — видно «Example Domain»? Если нет, рамки у вас режет расширение или политика браузера, и остальное смотреть бессмысленно.</li>
+    <li><b>Рамка 2</b> — форма Qbox нарисовалась или белый экран?</li>
+    <li><b>Рамки 3 и 4</b> — если форма видна, то в какой из них; и подставился ли тариф «Keremet TV PROMO».</li>
+    <li>Если где-то белый экран — откройте консоль браузера (F12 → Console) и пришлите красные строки.</li>
+  </ul>
+</div>
+
+</body>
+</html>
