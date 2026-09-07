@@ -90,6 +90,17 @@ export default function Landing() {
      * только при расчёте с дилерами в конце месяца.
      */
     if (import.meta.env.DEV) {
+      /*
+       * Объясняем, почему форма открылась переходом, а не окном. Симптом
+       * выглядит поломкой, а причина невидима: чаще всего страницу открыли
+       * по 127.0.0.1 или по адресу в локальной сети вместо localhost.
+       * Для Qbox это разные домены, и рамку он на них не разрешает.
+       */
+      console.warn(
+        `Форма откроется переходом: ${window.location.origin} не в списке ` +
+          "доменов, которым Qbox разрешает встраивание. Откройте страницу " +
+          "по http://localhost:8080 — см. EMBED_ALLOWED_ORIGINS в lib/qbox.ts.",
+      );
       console.info("Qbox →", url);
       const hook = (window as unknown as Record<string, unknown>).__qboxHook;
       if (typeof hook === "function") {
