@@ -111,8 +111,42 @@ export default function Landing() {
     goToForm(resolveProduct(sel));
   }
 
+  /**
+   * Переход к выбору тарифа.
+   *
+   * Сюда ведут кнопки в шапке и в верхнем баннере. Раньше они открывали
+   * форму сразу, и заявка уходила без тарифа: человек до карточек не дошёл
+   * и ничего не выбирал. Теперь он сначала выбирает, а форма открывается
+   * уже с готовым тарифом.
+   *
+   * Это решение заказчика, и оно лучше альтернатив: не требует ни второй
+   * формы в Qbox, ни видимого списка из девяти строк, а каждая заявка с
+   * этого пути приходит с тарифом.
+   *
+   * Кнопка нижнего баннера намеренно осталась прежней — она открывает форму
+   * без тарифа. Это путь для тех, кто тарифы смотреть не хочет: баннер прямо
+   * обещает «перезвоним и подскажем», и отправлять таких людей обратно
+   * к карточкам значило бы не выполнить обещание.
+   */
   function scrollToTariffs() {
-    document.getElementById("tariffs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const section = document.getElementById("tariffs");
+    if (!section) return;
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    /*
+     * Короткая подсветка секции. Нужна не для красоты: с кнопки в шапке
+     * тарифы часто уже на экране, прокрутка получается нулевой, и нажатие
+     * выглядит так, будто кнопка сломана.
+     *
+     * Класс снимается и ставится заново, между этим читается offsetWidth —
+     * без принудительного пересчёта раскладки браузер не заметит, что класс
+     * убирали, и анимация не перезапустится при повторном нажатии.
+     */
+    section.classList.remove("is-called");
+    void section.offsetWidth;
+    section.classList.add("is-called");
+    window.setTimeout(() => section.classList.remove("is-called"), 1400);
   }
 
   return (
@@ -123,8 +157,8 @@ export default function Landing() {
         langRu={c.langRu}
         langKz={c.langKz}
         lang={lang}
-        ctaLabel={c.heroCtaLabel}
-        onCta={openForm}
+        ctaLabel={c.chooseTariffLabel}
+        onCta={scrollToTariffs}
         onLangChange={setLang}
       />
 
@@ -132,13 +166,11 @@ export default function Landing() {
         <Hero
           title={c.heroTitle}
           subtitle={c.heroSubtitle}
-          ctaLabel={c.heroCtaLabel}
-          secondaryCtaLabel={c.heroSecondaryCtaLabel}
+          ctaLabel={c.chooseTariffLabel}
           imageAlt={c.heroImageAlt}
           highlights={c.heroHighlights}
           scrollHint={c.heroScrollHint}
-          onCta={openForm}
-          onSecondaryCta={scrollToTariffs}
+          onCta={scrollToTariffs}
         />
 
         <TariffsSection

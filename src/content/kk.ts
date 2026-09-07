@@ -13,6 +13,7 @@ export const content = {
     "Қазақтелеком желісі",
     "Жасырын төлемдерсіз",
   ],
+  chooseTariffLabel: "Тарифті таңдау",
   heroScrollHint: "Тарифтерге өту",
   heroImageAlt: "Үй интернеті иллюстрациясы",
   heroImageCaption: "Иллюстрация үшін орын",

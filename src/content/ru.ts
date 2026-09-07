@@ -13,6 +13,7 @@ export const content = {
     "Сеть Казахтелекома",
     "Без скрытых доплат",
   ],
+  chooseTariffLabel: "Выбрать тариф",
   heroScrollHint: "Перейти к тарифам",
   heroImageAlt: "Иллюстрация домашнего интернета",
   heroImageCaption: "Место под иллюстрацию",

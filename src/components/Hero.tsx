@@ -2,13 +2,21 @@ interface HeroProps {
   title: string;
   subtitle: string;
   ctaLabel: string;
-  secondaryCtaLabel: string;
+  /**
+   * Вторая кнопка баннера — необязательна.
+   *
+   * Сейчас не передаётся: главная кнопка сама ведёт к тарифам, и вторая
+   * с надписью «Смотреть тарифы» оказалась её дословным двойником. Две
+   * соседние кнопки с разными надписями и одинаковым действием сбивают
+   * с толку сильнее, чем отсутствие выбора.
+   */
+  secondaryCtaLabel?: string;
   imageAlt: string;
   /** Опорные факты под кнопкой: «Подключение за 1–2 дня» и подобные. */
   highlights: string[];
   scrollHint: string;
   onCta: () => void;
-  onSecondaryCta: () => void;
+  onSecondaryCta?: () => void;
 }
 
 /**
@@ -37,6 +45,9 @@ export default function Hero({
   onCta,
   onSecondaryCta,
 }: HeroProps) {
+  // Стрелка внизу баннера ведёт туда же, куда главная кнопка, если второго
+  // действия нет.
+  const scrollAction = onSecondaryCta ?? onCta;
   return (
     <section className="hero" aria-label={imageAlt}>
       {/* Слой необязательной фоновой фотографии (--hero-image) */}
@@ -71,9 +82,11 @@ export default function Hero({
             <button className="hero-btn hero-btn-primary" onClick={onCta}>
               {ctaLabel}
             </button>
-            <button className="hero-btn hero-btn-ghost" onClick={onSecondaryCta}>
-              {secondaryCtaLabel}
-            </button>
+            {secondaryCtaLabel && onSecondaryCta && (
+              <button className="hero-btn hero-btn-ghost" onClick={onSecondaryCta}>
+                {secondaryCtaLabel}
+              </button>
+            )}
           </div>
 
           <ul className="hero-highlights">
@@ -95,7 +108,7 @@ export default function Hero({
         </div>
       </div>
 
-      <button className="hero-scroll" onClick={onSecondaryCta} aria-label={scrollHint}>
+      <button className="hero-scroll" onClick={scrollAction} aria-label={scrollHint}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
