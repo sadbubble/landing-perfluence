@@ -76,11 +76,11 @@ export default function Landing() {
     const manager = attribution.dealerCode;
 
     if (canEmbedForm()) {
-      setFormUrl(buildEmbedUrl(product, manager));
+      setFormUrl(buildEmbedUrl(product, manager, lang));
       return;
     }
 
-    const url = buildFormUrl(product, manager);
+    const url = buildFormUrl(product, manager, lang);
 
     /*
      * Крючок для проверки привязки на запасном пути, только в режиме

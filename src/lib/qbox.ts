@@ -27,6 +27,18 @@ const FORM_ID = "7a52f500b34f49ad8fd63599e74a2ca5";
 export const MANAGER_KEY = "manager";
 
 /**
+ * Язык формы. Ключ и значения назвали в Qbox: ?lang=ru/kk/en.
+ *
+ * Без него форма открывается на своём языке по умолчанию, и человек,
+ * читавший лендинг по-казахски, упирается в русские подписи полей. Внутри
+ * формы переключатель есть, но заставлять переключаться дважды незачем.
+ *
+ * Английского на лендинге нет, поэтому `en` мы не шлём никогда — но форма
+ * его понимает, и посетитель может переключиться сам.
+ */
+const LANG_KEY = "lang";
+
+/**
  * Ключ тарифа. Подтверждён в интерфейсе Qbox.
  *
  * Проверено напрямую: воронка «тестовая Нурдаулет» → Настройки → Поля →
@@ -149,8 +161,15 @@ export function canEmbedForm(origin: string = window.location.origin): boolean {
   return EMBED_ALLOWED_ORIGINS.includes(origin);
 }
 
+/** Язык лендинга. Совпадает со значениями, которые ждёт форма Qbox. */
+export type FormLang = "ru" | "kk";
+
 /** Общая часть: параметры лида. Всегда идут ДО решётки. */
-function leadQuery(product: string | null, manager: string | null): string {
+function leadQuery(
+  product: string | null,
+  manager: string | null,
+  lang: FormLang,
+): string {
   const parts: string[] = [];
   const add = (key: string, value: string) =>
     // Именно encodeURIComponent, а не URLSearchParams: последний кодирует
@@ -160,6 +179,7 @@ function leadQuery(product: string | null, manager: string | null): string {
 
   if (manager) add(MANAGER_KEY, manager);
   if (product) for (const key of PRODUCT_KEYS) add(key, product);
+  add(LANG_KEY, lang);
   return parts.join("&");
 }
 
@@ -174,8 +194,12 @@ function leadQuery(product: string | null, manager: string | null): string {
  *                выберет в самой форме.
  * @param manager код менеджера или null, если человек пришёл без ссылки.
  */
-export function buildFormUrl(product: string | null, manager: string | null): string {
-  const q = leadQuery(product, manager);
+export function buildFormUrl(
+  product: string | null,
+  manager: string | null,
+  lang: FormLang,
+): string {
+  const q = leadQuery(product, manager, lang);
   // Параметры строго до «#» — иначе они попадут во фрагмент и потеряются.
   return `${FORM_BASE}${q ? `?${q}` : ""}#/${FORM_ID}`;
 }
@@ -198,7 +222,11 @@ export function buildFormUrl(product: string | null, manager: string | null): st
  *
  *     /forms/?manager=anna&Product_name=X#/<id>?embed=true
  */
-export function buildEmbedUrl(product: string | null, manager: string | null): string {
-  const q = leadQuery(product, manager);
+export function buildEmbedUrl(
+  product: string | null,
+  manager: string | null,
+  lang: FormLang,
+): string {
+  const q = leadQuery(product, manager, lang);
   return `${FORM_BASE}${q ? `?${q}` : ""}#/${FORM_ID}?embed=true`;
 }
