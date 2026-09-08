@@ -33,8 +33,7 @@ export const content = {
       headline: "до 200 Мбит/с",
       tagline: "Для дома и учёбы",
       name: "Интернет 200",
-      description: "Домашний интернет со скоростью до 200 Мбит/с.",
-      descriptionList: null,
+      descriptionList: ["Домашний интернет"],
       price: {
         contract: "7 249",
         noContract: "7 999",
@@ -50,8 +49,7 @@ export const content = {
       headline: "до 500 Мбит/с",
       tagline: "Для тех, кому нужна скорость",
       name: "Интернет 500",
-      description: "Домашний интернет со скоростью до 500 Мбит/с.",
-      descriptionList: null,
+      descriptionList: ["Домашний интернет"],
       price: {
         contract: "9 320",
         noContract: "9 999",
@@ -67,9 +65,11 @@ export const content = {
       headline: "200 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV PROMO",
-      description:
-        "Интернет 200 Мбит/с + ТВ 160+ каналов + 7 онлайн-кинотеатров.",
-      descriptionList: null,
+      descriptionList: [
+        "Домашний интернет",
+        "160+ телеканалов",
+        "7 онлайн-кинотеатров",
+      ],
       price: {
         contract: null,
         noContract: "5 699",
@@ -85,11 +85,8 @@ export const content = {
       headline: "интернет + ТВ + моб. связь",
       tagline: "Для семьи — всё в одном",
       name: "Bereket",
-      description: null,
-      descriptionList: [
-        "2 SIM: интернет + ТВ + мобильная связь",
-        "4 SIM: до 500 Мбит/с + TV+ Full + моб. связь на 4 SIM",
-      ],
+      // Состав у Bereket свой на каждый вариант SIM — см. simVariants.
+      descriptionList: null,
       price: {
         contract: "12 999",
         noContract: "13 999",
@@ -101,6 +98,11 @@ export const content = {
           id: "2sim",
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
+          descriptionList: [
+            "Домашний интернет",
+            "Телевидение",
+            "Мобильная связь на 2 SIM",
+          ],
           price: {
             contract: "12 999",
             noContract: "13 999",
@@ -111,7 +113,12 @@ export const content = {
         {
           id: "4sim",
           label: "4 SIM",
-          headline: "до 500 Мбит/с + TV+ Full + 4 SIM",
+          headline: "интернет + ТВ + 4 SIM",
+          descriptionList: [
+            "Интернет до 500 Мбит/с",
+            "TV+ Full",
+            "Мобильная связь на 4 SIM",
+          ],
           price: {
             contract: "16 999",
             noContract: "17 999",
@@ -246,6 +253,8 @@ export interface SimVariant {
   label: string;
   /** Своя строка сути: у 4 SIM она отличается от 2 SIM. */
   headline: string;
+  /** Свой состав: у 4 SIM это TV+ Full и 4 SIM, у 2 SIM — обычное ТВ. */
+  descriptionList: string[];
   price: TariffPrice;
 }
 
@@ -256,7 +265,15 @@ export interface Tariff {
   tagline: string;
   /** Строка сути под названием: «до 200 Мбит/с». Цифры выделяются жирным. */
   headline: string;
-  description: string | null;
+  /**
+   * Состав тарифа — колонка «Состав / условия» из таблицы ТЗ п.4.
+   *
+   * Короткими пунктами, а не абзацем: карточку читают взглядом сверху вниз,
+   * и «160+ телеканалов» отдельной строкой видно, а внутри предложения — нет.
+   *
+   * Не повторяет headline: скорость уже написана там, здесь только то, чего
+   * в ней нет. null — у тарифа состав задан по вариантам SIM, см. simVariants.
+   */
   descriptionList: string[] | null;
   price: TariffPrice;
   /** Варианты по числу SIM. null — у тарифа один вариант, переключателя нет. */

@@ -9,6 +9,8 @@ interface TariffCardProps {
   name: string;
   tagline?: string | null;
   headline: string;
+  /** Состав тарифа (ТЗ п.4). У Bereket берётся из выбранного варианта SIM. */
+  descriptionList?: string[] | null;
   price: TariffPrice;
   /** Варианты по числу SIM. Есть только у Bereket, у остальных null. */
   simVariants?: SimVariant[] | null;
@@ -60,6 +62,7 @@ export default function TariffCard({
   name,
   tagline,
   headline,
+  descriptionList,
   price,
   simVariants,
   badge,
@@ -78,6 +81,8 @@ export default function TariffCard({
   const variant = simVariants?.find((v) => v.id === simId) ?? null;
   const activePrice = variant ? variant.price : price;
   const activeHeadline = variant ? variant.headline : headline;
+  // Состав: у Bereket свой на каждый вариант SIM, у остальных общий.
+  const features = variant ? variant.descriptionList : (descriptionList ?? []);
 
   const hasContract = activePrice.contract !== null;
   const showContract = mode === "contract" && hasContract;
@@ -118,6 +123,25 @@ export default function TariffCard({
         <span className="tcard-price-cur">{currency}</span>
       </div>
       <div className="tcard-per">{perMonthShort}</div>
+
+      {features.length > 0 && (
+        <ul className="tcard-features">
+          {features.map((f) => (
+            <li key={f}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3 8.5 L6.3 11.8 L13 5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {f}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {showContract && saving > 0 && (
         <span className="tcard-saving">

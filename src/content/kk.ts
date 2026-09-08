@@ -33,8 +33,7 @@ export const content = {
       headline: "200 Мбит/с дейін",
       tagline: "Үй мен оқуға",
       name: "Интернет 200",
-      description: "200 Мбит/с дейінгі жылдамдықтағы үй интернеті.",
-      descriptionList: null,
+      descriptionList: ["Үй интернеті"],
       price: {
         contract: "7 249",
         noContract: "7 999",
@@ -50,8 +49,7 @@ export const content = {
       headline: "500 Мбит/с дейін",
       tagline: "Жылдамдық қажет болғандарға",
       name: "Интернет 500",
-      description: "500 Мбит/с дейінгі жылдамдықтағы үй интернеті.",
-      descriptionList: null,
+      descriptionList: ["Үй интернеті"],
       price: {
         contract: "9 320",
         noContract: "9 999",
@@ -67,9 +65,11 @@ export const content = {
       headline: "200 Мбит/с + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV PROMO",
-      description:
-        "200 Мбит/с интернет + 160-тан астам арна ТВ + 7 онлайн-кинотеатр.",
-      descriptionList: null,
+      descriptionList: [
+        "Үй интернеті",
+        "160-тан астам телеарна",
+        "7 онлайн-кинотеатр",
+      ],
       price: {
         contract: null,
         noContract: "5 699",
@@ -85,11 +85,8 @@ export const content = {
       headline: "интернет + ТВ + ұялы байланыс",
       tagline: "Отбасыға — бәрі бір жерде",
       name: "Bereket",
-      description: null,
-      descriptionList: [
-        "2 SIM: интернет + ТВ + ұялы байланыс",
-        "4 SIM: 500 Мбит/с дейін + TV+ Full + 4 SIM ұялы байланыс",
-      ],
+      // Bereket-тің құрамы SIM нұсқасына қарай әртүрлі — simVariants қараңыз.
+      descriptionList: null,
       price: {
         contract: "12 999",
         noContract: "13 999",
@@ -101,6 +98,11 @@ export const content = {
           id: "2sim",
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
+          descriptionList: [
+            "Үй интернеті",
+            "Теледидар",
+            "2 SIM ұялы байланыс",
+          ],
           price: {
             contract: "12 999",
             noContract: "13 999",
@@ -111,7 +113,12 @@ export const content = {
         {
           id: "4sim",
           label: "4 SIM",
-          headline: "500 Мбит/с дейін + TV+ Full + 4 SIM",
+          headline: "интернет + ТВ + 4 SIM",
+          descriptionList: [
+            "500 Мбит/с дейін интернет",
+            "TV+ Full",
+            "4 SIM ұялы байланыс",
+          ],
           price: {
             contract: "16 999",
             noContract: "17 999",

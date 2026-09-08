@@ -758,6 +758,38 @@ td.nowrap, th.nowrap { white-space: nowrap; }
 }
 .tcard-note svg { flex-shrink: 0; opacity: 0.7; }
 
+/*
+ * Состав тарифа — колонка «Состав / условия» из таблицы ТЗ п.4.
+ *
+ * Пункты выровнены по левому краю, а сам список отцентрован блоком: в
+ * карточке всё по центру, но текст, набранный в центр, читается заметно
+ * хуже — глазу негде зацепиться за начало строки.
+ *
+ * Галочка декоративная и спрятана от скринридеров: смысл несёт текст.
+ */
+.tcard-features {
+  width: fit-content;
+  margin: 14px auto 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.tcard-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 5px;
+}
+.tcard-features li:first-child { margin-top: 0; }
+.tcard-features svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand);
+}
+
 .tcard-extra {
   margin: 10px 0 0;
   padding: 0;
@@ -952,6 +984,29 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   cursor: default;
 }
 .price-toggle-hint { margin: 0; font-size: 13px; color: var(--ink-muted); }
+
+/*
+ * Переключатель цен на узких экранах.
+ *
+ * При 320px он занимал 326px при доступных 280 — страница получала
+ * горизонтальную прокрутку. Казахские подписи «Келісімшартпен» и
+ * «Келісімшартсыз» шире русских «С контрактом» и «Без контракта», поэтому
+ * в русской версии всё было в порядке и дефект долго не замечали.
+ *
+ * Два средства сразу. Уменьшенные отступы и кегль возвращают блок в строку.
+ * Разрешённый перенос — страховка: если перевод когда-нибудь окажется ещё
+ * длиннее, кнопки встанут в два ряда, а прокрутка не появится.
+ */
+@media (max-width: 420px) {
+  .price-toggle {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  .price-toggle-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
 
 /* --- Цена в карточке ----------------------------------------------------- */
 
