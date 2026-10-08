@@ -5,9 +5,9 @@ export const content = {
   langRu: "RU",
   langKz: "KZ",
 
-  pageTitle: "Интернет және теледидар қосу — АО «Қазақтелеком»-ның ресми серіктесі",
+  pageTitle: "Интернет және ТВ қосу — АО «Қазақтелеком»-ның ресми серіктесі",
 
-  heroTitle: "Қазақтелекомнан үй интернеті, теледидар және SIM-карта",
+  heroTitle: "Қазақтелекомнан үй интернеті, ТВ және SIM-карта",
   heroSubtitle:
     "Ыңғайлы уақытта жылдам қосылу. Қазақстанның ең ірі операторының сенімді желісі — сіздің үйіңізде.",
   heroCtaLabel: "Өтінім қалдыру",
@@ -89,7 +89,7 @@ export const content = {
       headline: "интернет + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV 2026",
-      descriptionList: ["Үй интернеті", "Теледидар"],
+      descriptionList: ["Үй интернеті", "ТВ"],
       price: {
         contract: null,
         noContract: "8 999",
@@ -120,7 +120,7 @@ export const content = {
           headline: "интернет + ТВ + 2 SIM",
           descriptionList: [
             "Үй интернеті",
-            "Теледидар",
+            "ТВ",
             "2 SIM ұялы байланыс",
           ],
           price: {
