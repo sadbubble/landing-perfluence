@@ -84,13 +84,22 @@ export default function TariffCard({
   // Состав: у Bereket свой на каждый вариант SIM, у остальных общий.
   const features = variant ? variant.descriptionList : (descriptionList ?? []);
 
-  const hasContract = activePrice.contract !== null;
-  const showContract = mode === "contract" && hasContract;
-  const amount = showContract ? activePrice.contract! : activePrice.noContract;
+  /*
+   * Цена строго из выбранного режима. Раньше у тарифа с одной ценой она
+   * показывалась на обеих вкладках; теперь такой тариф живёт только на
+   * своей вкладке, а секция отбирает карточки заранее (см. TariffsSection).
+   * null сюда попасть не должен — проверка ниже лишь страховка.
+   */
+  const showContract = mode === "contract";
+  const amount = showContract ? activePrice.contract : activePrice.noContract;
+  if (amount === null) return null;
+
   const caption = showContract ? activePrice.contractLabel : noContractLabel;
-  const saving = hasContract
-    ? toNumber(activePrice.noContract) - toNumber(activePrice.contract!)
-    : 0;
+  // Выгоду можно посчитать, только если у тарифа есть обе цены.
+  const saving =
+    showContract && activePrice.contract !== null && activePrice.noContract !== null
+      ? toNumber(activePrice.noContract) - toNumber(activePrice.contract)
+      : 0;
 
   return (
     <article className={"tcard" + (recommended ? " is-popular" : "")}>

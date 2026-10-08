@@ -36,10 +36,11 @@ export const content = {
       tagline: "Для дома и учёбы",
       name: "Интернет 200",
       descriptionList: ["Домашний интернет"],
+      // Только без контракта: на вкладке «С контрактом» карточки нет.
       price: {
-        contract: "7 249",
+        contract: null,
         noContract: "7 999",
-        contractLabel: "Контракт на 1 год",
+        contractLabel: null,
         extra: [],
       },
       simVariants: null,
@@ -72,15 +73,33 @@ export const content = {
         "160+ телеканалов",
         "7 онлайн-кинотеатров",
       ],
+      // Только с контрактом на год. Без контракта на её месте Keremet TV 2026.
       price: {
-        contract: null,
-        noContract: "5 699",
-        contractLabel: null,
+        contract: "5 699",
+        noContract: null,
+        contractLabel: "Контракт на 1 год",
         extra: ["Акционная цена действует 1 год"],
       },
       simVariants: null,
       badge: "Акция",
       recommended: true,
+    },
+    {
+      slug: "keremet-tv-2026",
+      headline: "интернет + ТВ",
+      tagline: "Для любителей кино и ТВ",
+      name: "Keremet TV 2026",
+      // Состав заказчик пока не прислал — стоит общее, без цифр.
+      descriptionList: ["Домашний интернет", "Телевидение"],
+      price: {
+        contract: null,
+        noContract: "8 999",
+        contractLabel: null,
+        extra: [],
+      },
+      simVariants: null,
+      badge: null,
+      recommended: false,
     },
     {
       slug: "bereket",
@@ -222,19 +241,28 @@ export const content = {
   footerPrivacy: "Политика обработки персональных данных",
 };
 
-export type TariffSlug = "internet-200" | "internet-500" | "keremet-tv-promo" | "bereket";
+export type TariffSlug =
+  | "internet-200"
+  | "internet-500"
+  | "keremet-tv-promo"
+  | "keremet-tv-2026"
+  | "bereket";
 
 /**
  * Цена тарифа.
  *
  * Хранится числами-строками без валюты: подпись «₸/мес.» одна на все
  * карточки и меняется вместе с языком, а сумма — нет.
- * `contract: null` — у тарифа одна цена (акционный Keremet), переключатель
- * для него ничего не меняет.
  */
 export interface TariffPrice {
+  /**
+   * Цена в каждом режиме необязательна. null значит «в этом режиме тарифа
+   * нет» — карточка на соответствующей вкладке не показывается вовсе.
+   * Так устроены Интернет 200 (только без контракта) и два Keremet: PROMO
+   * только с контрактом на год, TV 2026 только без контракта.
+   */
   contract: string | null;
-  noContract: string;
+  noContract: string | null;
   contractLabel: string | null;
   /** Дополнительные условия: например, цены на 4 SIM у Bereket. */
   extra: string[];

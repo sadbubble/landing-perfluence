@@ -40,6 +40,28 @@ export default function TariffsSection({
   // человек видит в рекламе у блогера.
   const [mode, setMode] = useState<PriceMode>("contract");
 
+  /*
+   * Переключали ли уже вкладку. Нужно ради анимации появления: скрипт
+   * useReveal собирает элементы .reveal один раз при загрузке, и карточка,
+   * появившаяся после переключения (Интернет 200, Keremet TV 2026), так и
+   * осталась бы с прозрачностью 0. Раз человек нажал переключатель, секцию
+   * он уже видит — новые карточки показываем сразу.
+   */
+  const [switched, setSwitched] = useState(false);
+  const choose = (m: PriceMode) => {
+    setMode(m);
+    setSwitched(true);
+  };
+
+  /*
+   * На каждой вкладке свой набор: тариф показывается, только если у него
+   * есть цена в этом режиме. У Bereket цены лежат в вариантах SIM.
+   */
+  const visible = tariffs.filter((t) => {
+    const prices = t.simVariants ? t.simVariants.map((v) => v.price) : [t.price];
+    return prices.some((p) => (mode === "contract" ? p.contract : p.noContract) !== null);
+  });
+
   return (
     <section id="tariffs" className="tariffs">
       <div className="tariffs-inner">
@@ -54,14 +76,14 @@ export default function TariffsSection({
             <button
               className={"price-toggle-btn" + (mode === "contract" ? " is-active" : "")}
               aria-pressed={mode === "contract"}
-              onClick={() => setMode("contract")}
+              onClick={() => choose("contract")}
             >
               {toggleContract}
             </button>
             <button
               className={"price-toggle-btn" + (mode === "noContract" ? " is-active" : "")}
               aria-pressed={mode === "noContract"}
-              onClick={() => setMode("noContract")}
+              onClick={() => choose("noContract")}
             >
               {toggleNoContract}
             </button>
@@ -69,9 +91,14 @@ export default function TariffsSection({
           <p className="price-toggle-hint">{priceModeHint}</p>
         </div>
 
-        <div className="tariffs-grid">
-          {tariffs.map((tariff, i) => (
-            <div className="reveal" style={{ transitionDelay: `${i * 70}ms` }} key={tariff.slug}>
+        {/* Число карточек в классе: сетка подстраивает колонки под 3 или 4 */}
+        <div className={`tariffs-grid is-${visible.length}`}>
+          {visible.map((tariff, i) => (
+            <div
+              className={"reveal" + (switched ? " is-visible" : "")}
+              style={{ transitionDelay: switched ? "0ms" : `${i * 70}ms` }}
+              key={tariff.slug}
+            >
               <TariffCard
                 {...tariff}
                 mode={mode}

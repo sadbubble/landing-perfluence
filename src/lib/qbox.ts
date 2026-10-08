@@ -92,13 +92,14 @@ export interface TariffSelection {
  * Ключ собирается как `slug|mode` или `slug|mode|sim` — см. productKey().
  */
 export const QBOX_PRODUCTS: Record<string, string> = {
-  "internet-200|contract":        "Интернет 200 (контракт 1 год)",
+  // Интернет 200 — только без контракта.
   "internet-200|noContract":      "Интернет 200 (без контракта)",
   "internet-500|contract":        "Интернет 500 (контракт 1 год)",
   "internet-500|noContract":      "Интернет 500 (без контракта)",
-  // У акционного Keremet цена одна, переключатель контракта на нём ничего
-  // не меняет — поэтому у него один продукт, а не два.
-  "keremet-tv-promo|noContract":  "Keremet TV PROMO",
+  // Два разных тарифа Keremet: PROMO только с контрактом на год,
+  // TV 2026 — только без контракта.
+  "keremet-tv-promo|contract":    "Keremet TV PROMO (контракт 1 год)",
+  "keremet-tv-2026|noContract":   "Keremet TV 2026 (без контракта)",
   "bereket|contract|2sim":        "Bereket 2 SIM (контракт 3 года)",
   "bereket|noContract|2sim":      "Bereket 2 SIM (без контракта)",
   "bereket|contract|4sim":        "Bereket 4 SIM (контракт 3 года)",
@@ -122,11 +123,6 @@ export function productKey(sel: TariffSelection): string {
 export function resolveProduct(sel: TariffSelection): string | null {
   const direct = QBOX_PRODUCTS[productKey(sel)];
   if (direct) return direct;
-
-  // Тариф с одной ценой: переключатель контракта на него не влияет, поэтому
-  // «contract» у такого тарифа означает то же самое, что «noContract».
-  const single = QBOX_PRODUCTS[`${sel.slug}|noContract`];
-  if (single && !sel.sim) return single;
 
   if (import.meta.env.DEV) {
     console.warn(`Qbox: нет продукта для ${productKey(sel)} — заявка уйдёт без тарифа`);
