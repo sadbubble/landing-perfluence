@@ -1,3 +1,5 @@
+import { HERO_LOGO } from "../lib/heroLogo";
+
 interface HeroProps {
   /**
    * Связка «логотип Казахтелекома | Официальный партнёр» над заголовком.
@@ -63,7 +65,29 @@ export default function Hero({
   return (
     <section className="hero" aria-label={imageAlt}>
       {/* Слой необязательной фоновой фотографии (--hero-image) */}
-      <div className="hero-photo" aria-hidden="true" />
+      <div className="hero-photo" aria-hidden="true">
+        {/*
+          * Логотип на экране телевизора — отдельным слоем, а не в самой
+          * картинке. Впечённый в JPEG, он растягивался вместе с маленьким
+          * исходником, и буквы плыли. SVG рисуется в разрешении экрана.
+          * viewBox и slice совпадают с background-size: cover фона, так что
+          * логотип стоит на экране при любом размере окна. Положение
+          * считает scripts/hero-logo-on-tv.py.
+          */}
+        <svg
+          className="hero-photo-logo"
+          viewBox={HERO_LOGO.viewBox}
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <image
+            href={HERO_LOGO.src}
+            width={HERO_LOGO.width}
+            height={HERO_LOGO.height}
+            transform={HERO_LOGO.transform}
+            opacity={HERO_LOGO.opacity}
+          />
+        </svg>
+      </div>
 
       {/* Затемнение: без него текст на светлых участках фона нечитаем */}
       <div className="hero-scrim" aria-hidden="true" />
