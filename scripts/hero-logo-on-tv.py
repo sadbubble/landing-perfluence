@@ -53,6 +53,12 @@ SEED = (1130, 233)          # точка внутри экрана на hero-raw
 OCCLUDER = (1185, 295)      # правее и ниже — телефон, заливку там отсекаем
 
 TARGET_WIDTH = 2560
+
+# Логотип на экране ТВ выключен: заказчик посчитал его неудачным — плоский
+# знак на объёмном экране читался как наклейка. Скрипт по умолчанию готовит
+# только фон. Чтобы вернуть логотип: True здесь, вернуть слой в Hero.tsx
+# из _archive/hero-tv-logo/ и перезапустить скрипт.
+TV_LOGO = False
 # Логотип по центру экрана, шириной 62% экрана. Телефон закрывает правый
 # нижний угол экрана, но центр свободен — скрипт это проверяет.
 LOGO_W, LOGO_CU, LOGO_CV = 0.62, 0.5, 0.5
@@ -140,6 +146,9 @@ def main():
     mask.paste(255, (hi, 0, TARGET_WIDTH, th))
     mask.paste(ramp.resize((hi - lo, th)), (lo, 0))
     Image.composite(sharp, up, mask).save(OUT_IMG, quality=88, optimize=True, progressive=True)
+    if not TV_LOGO:
+        print("готово:", OUT_IMG, "(логотип на экране ТВ выключен, TV_LOGO = False)")
+        return
 
     # --- 2. логотип
     logo = Image.open(LOGO_SRC).convert("RGBA")
