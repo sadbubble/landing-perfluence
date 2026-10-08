@@ -9,7 +9,14 @@
 - `heroLogo.ts` — положение логотипа (сгенерирован скриптом);
 - `kt-logo-color.png` — цветной логотип из официального файла заказчика.
 
-Как вернуть: в `scripts/hero-logo-on-tv.py` поставить `TV_LOGO = True` и
-перезапустить — он заново создаст `src/lib/heroLogo.ts` и
-`public/kt-logo-color.png`. Затем вернуть в `Hero.tsx` SVG-слой внутри
-`.hero-photo` (см. коммит 139210e) и стиль `.hero-photo-logo`.
+- `hero-logo-on-tv.py` — скрипт, который это считал.
+
+Вариант заменён «включённым» экраном: экран светится фирменным синим, на
+нём белый логотип с ореолом, поверх — блики стекла. Его делает
+`scripts/hero-image.py`.
+
+Как вернуть этот вариант (цветной логотип на белом экране): положить
+скрипт обратно в `scripts/`, поставить в нём `TV_LOGO = True`, запустить —
+он создаст `src/lib/heroLogo.ts` и `public/kt-logo-color.png`. Затем вернуть
+в `Hero.tsx` SVG-слой внутри `.hero-photo` (см. коммит 139210e) и стиль
+`.hero-photo-logo`. В `scripts/hero-image.py` выключить `BRAND_SCREEN`.
