@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLang } from "../hooks/useLang";
 import { useReveal } from "../hooks/useReveal";
 import { content as ru } from "../content/ru";
@@ -39,6 +39,11 @@ export default function Landing() {
 
   // Пересобираем список блоков при смене языка: секции перерисовываются
   useReveal([lang]);
+
+  // Заголовок вкладки на языке страницы: раньше он всегда оставался русским.
+  useEffect(() => {
+    document.title = c.pageTitle;
+  }, [c.pageTitle]);
 
   /**
    * Менеджер, по чьей ссылке пришёл посетитель (ТЗ п.5).
@@ -175,6 +180,7 @@ export default function Landing() {
 
       <main>
         <Hero
+          partnerBadge={c.partnerBadge}
           title={c.heroTitle}
           subtitle={c.heroSubtitle}
           ctaLabel={c.chooseTariffLabel}

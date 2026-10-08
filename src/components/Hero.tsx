@@ -1,4 +1,12 @@
 interface HeroProps {
+  /**
+   * Плашка «Официальный партнёр АО «Казахтелеком»» над заголовком.
+   *
+   * По просьбе заказчика она теперь видна сразу, на первом экране, а не
+   * только в подвале. В подвале тоже осталась: ТЗ п.3 требует указания
+   * партнёрства, и лишний раз оно не мешает.
+   */
+  partnerBadge: string;
   title: string;
   subtitle: string;
   ctaLabel: string;
@@ -35,6 +43,7 @@ interface HeroProps {
  * окну, и низ баннера вместе с кнопкой уезжает под панель браузера.
  */
 export default function Hero({
+  partnerBadge,
   title,
   subtitle,
   ctaLabel,
@@ -75,6 +84,7 @@ export default function Hero({
 
       <div className="hero-inner">
         <div className="hero-copy">
+          <p className="hero-partner">{partnerBadge}</p>
           <h1 className="hero-title">{title}</h1>
           <p className="hero-subtitle">{subtitle}</p>
 

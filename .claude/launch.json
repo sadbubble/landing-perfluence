@@ -9,6 +9,17 @@
         "dev"
       ],
       "port": 8080
+    },
+    {
+      "name": "dev-4200",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "4200",
+        "--strictPort"
+      ],
+      "port": 4200
     }
   ]
 }
