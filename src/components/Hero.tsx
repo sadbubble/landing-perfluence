@@ -1,12 +1,14 @@
 interface HeroProps {
   /**
-   * Плашка «Официальный партнёр АО «Казахтелеком»» над заголовком.
+   * Связка «логотип Казахтелекома | Официальный партнёр» над заголовком.
    *
-   * По просьбе заказчика она теперь видна сразу, на первом экране, а не
-   * только в подвале. В подвале тоже осталась: ТЗ п.3 требует указания
-   * партнёрства, и лишний раз оно не мешает.
+   * ТЗ п.3 требует и указания партнёрства, и «согласованного логотипа».
+   * Логотип — официальный файл заказчика (assets-src/logo_latin/white.png),
+   * не перерисованный и не сгенерированный. Текстовая плашка с полной
+   * фразой осталась в подвале.
    */
-  partnerBadge: string;
+  partnerLabel: string;
+  logoAlt: string;
   title: string;
   subtitle: string;
   ctaLabel: string;
@@ -43,7 +45,8 @@ interface HeroProps {
  * окну, и низ баннера вместе с кнопкой уезжает под панель браузера.
  */
 export default function Hero({
-  partnerBadge,
+  partnerLabel,
+  logoAlt,
   title,
   subtitle,
   ctaLabel,
@@ -84,7 +87,17 @@ export default function Hero({
 
       <div className="hero-inner">
         <div className="hero-copy">
-          <p className="hero-partner">{partnerBadge}</p>
+          <p className="hero-partner">
+            <img
+              className="hero-partner-logo"
+              src="/kt-logo-white.png"
+              alt={logoAlt}
+              width={475}
+              height={72}
+            />
+            <span className="hero-partner-sep" aria-hidden="true" />
+            <span className="hero-partner-text">{partnerLabel}</span>
+          </p>
           <h1 className="hero-title">{title}</h1>
           <p className="hero-subtitle">{subtitle}</p>
 

@@ -180,7 +180,8 @@ export default function Landing() {
 
       <main>
         <Hero
-          partnerBadge={c.partnerBadge}
+          partnerLabel={c.partnerLabel}
+          logoAlt={c.ktLogoAlt}
           title={c.heroTitle}
           subtitle={c.heroSubtitle}
           ctaLabel={c.chooseTariffLabel}

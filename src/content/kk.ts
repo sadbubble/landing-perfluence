@@ -1,5 +1,7 @@
 export const content = {
   partnerBadge: "АО «Қазақтелеком»-ның ресми серіктесі",
+  partnerLabel: "Ресми серіктес",
+  ktLogoAlt: "Қазақтелеком",
   langRu: "RU",
   langKz: "KZ",
 

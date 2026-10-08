@@ -1,142 +1,121 @@
-# Изображение для баннера
+# Картинка верхнего баннера
 
-## Что именно генерируем
+Текущая картинка — октябрь 2026: роутер, телевизор, SIM-карта и телефон из
+«3D-пластика» на синем фоне с сеткой-глобусом. На экране телевизора —
+официальный логотип Казахтелекома.
 
-Баннер собран слоями: заливка, текст, кнопки и графика — вёрсткой, а из
-генератора приходит **фоновое изображение**. Просить нейросеть нарисовать
-баннер целиком не надо: буквы выйдут искажёнными, логотип — выдуманным, а
-переводить такую картинку на казахский нечем.
+## Из чего она собрана
 
-Вырезанные по контуру люди — тоже нет. Для них нужен исходник от 1200px по
-высоте, иначе на первом экране сразу видно мыло (проверено на практике).
+1. **Фон с предметами** — сгенерирован в Nano Banana 2 по промпту ниже,
+   затем отредактирован там же: затемнена левая часть под текстом.
+2. **Логотип на экране** — наложен программно, а не сгенерирован:
+   `scripts/hero-logo-on-tv.py`. Нейросети перерисовывают чужие логотипы и
+   искажают буквы, а ТЗ п.3 требует «согласованный» логотип. Скрипт берёт
+   официальный файл заказчика и кладёт его на экран с перспективой.
 
-Поэтому цель — **широкий фон в стиле Казахтелекома, без людей и без текста**.
+Исходники лежат в `assets-src/` (вне git): `hero-raw.jpg` — картинка без
+логотипа, `logo_latin/` — логотипы заказчика в трёх цветах.
 
-## Стиль, который берём с их сайта
-
-На сайте оператора два узнаваемых приёма. Для фона подходит первый:
-
-1. **Яркая синева и объёмные 3D-объекты** — так у них оформлены плитки
-   интернет-магазина: роутер, планшет, умный дом, наушники. Глянцевый
-   пластик, мягкий свет, чистый цветной фон. Генератору такое даётся
-   надёжно: нет лиц, которые можно испортить.
-2. Тёмный кинематографичный кадр (баннер OFFSIDE). Красиво, но это
-   фотография футбольного матча — под наш оффер не ложится.
+Текст, кнопки и связка «логотип | Официальный партнёр» над заголовком —
+вёрстка, а не картинка: так они чёткие и переводятся на русский.
 
 ## Промпт
 
-⚠️ Перед генерацией замените `PERFLUENCE_ACCENT` на фирменный цвет Perfluence
-(например, `warm coral`, `vivid magenta`, `lime green` — словами, не хексом:
-генераторы понимают названия точнее). Именно он даст тот самый «чуть
-заметный» второй слой поверх синевы оператора.
+Приложите как референс по стилю баннер «ОҚЫ! АРАЛАС!» из `for landing.pdf`
+(страница 1, второй пример).
 
-```
-Ultra high quality 3D render, wide cinematic banner, 21:9 aspect ratio,
-for a home internet and TV provider landing page.
+```text
+Wide 21:9 hero banner background for a telecom landing page, high-end 3D render.
 
-Scene: a weightless composition of clean, modern telecom devices floating
-in space — a white Wi-Fi router with soft antennas, a slim tablet showing
-a blank dark screen, a wireless remote, and a few smooth abstract shapes
-(rounded cubes, spheres, soft rings). Everything levitating gently, casting
-soft contact shadows.
+Style: "3D plastic" product illustration as in modern telecom advertising —
+soft glossy plastic, rounded friendly shapes, clean bright studio lighting.
+If a reference image is attached, match its style, lighting and colors.
 
-Composition: all objects grouped in the RIGHT third of the frame. The LEFT
-two thirds is calm empty background with a smooth gradient — headline text
-will be placed there. Generous negative space, nothing crossing into the
-left side.
+Background: deep royal blue #0044BC across the whole left half, smoothly
+brightening to azure #008EFF only behind the group of objects on the right.
+The left half is evenly toned, with no bright glow. Very faint thin white
+line art at 10-15% opacity: a wireframe globe of latitude and longitude
+lines and a few concentric circles, mostly behind the objects.
 
-Colour: dominant deep azure blue to bright sky blue gradient background,
-rich and saturated but clean, in the spirit of a large telecom brand.
-Devices in white and light grey with glossy highlights. Accent details in
-PERFLUENCE_ACCENT on a few small elements only — a thin ring, a small
-sphere, the glow of one screen edge — no more than five percent of the
-image, subtle but noticeable.
+Objects, floating and slightly tilted, with soft shadows and a gentle glow:
+a white Wi-Fi router with two antennas; a slim flat-screen TV with a blank
+glossy screen; an oversized SIM card in glossy white and blue plastic with a
+gold chip; a smartphone with a blank dark screen; small accents — two glossy
+spheres, one soft ring, one small rounded cube. Colors: white, light grey,
+shades of blue; one or two small accents in warm golden yellow #F1B13E.
 
-Lighting and finish: soft studio lighting, gentle rim light on the objects,
-smooth glossy plastic and matte surfaces, subtle depth of field, faint
-bokeh particles in the background. Clean, premium, optimistic mood.
+Composition: the objects form one group between 52% and 78% of the image
+width and between 15% and 85% of the height. Nothing important near any edge.
 
-Rendering: octane style 3D product visualisation, extremely sharp detail,
-8K, crisp edges, no noise, no grain.
+Quality: crisp edges, very high detail, no noise. Bright, premium mood.
 
-Do NOT include: any text, letters, numbers, logos, watermarks, brand marks,
-user interfaces or icons on screens, people, hands, faces, cluttered
-backgrounds, dark or moody tones, harsh shadows.
+Do NOT include: any text, letters, numbers, logos, brand marks, watermarks,
+icons or interfaces on screens, people, hands, faces, red color.
+Output at the highest available resolution, at least 2560 px wide.
 ```
 
-### Вариант помягче — абстрактный, без предметов
+Два пожелания промпт выполнил не до конца, и это стоит знать при следующей
+генерации:
 
-Если предметы выйдут неудачно, этот вариант надёжнее: чистая абстракция
-почти всегда получается с первого раза.
+- **Группа предметов шире заказанного** — 48–85% ширины вместо 52–78%.
+  Из-за этого на экранах 4:3 и 5:4 картинка отключена (см. ниже).
+- **Разрешение 1584×672** вместо 2560 и больше. На 1920×1080 картинка
+  растянута в 1,6 раза; для мягкого 3D-рендера это терпимо, но более
+  крупный оригинал был бы лучше.
 
-```
-Ultra high quality abstract 3D render, wide cinematic banner, 21:9.
+## Как картинка ложится на разные экраны
 
-Smooth flowing shapes and soft glass ribbons floating over a deep azure to
-bright sky blue gradient. Gentle concentric wave rings suggesting a signal
-spreading outward, translucent glass spheres, soft light refractions.
+Кадр 21:9 растягивается на всё окно (`cover`) по центру и обрезается по бокам.
+Положение подбиралось перебором по 12 популярным экранам: сдвиг вправо
+загоняет предметы под текст на больших экранах, влево — режет их справа.
 
-Composition: the shapes gather in the RIGHT third of the frame; the LEFT
-two thirds stays calm and almost empty for headline text.
-
-Accent details in PERFLUENCE_ACCENT on a few small elements only, roughly
-five percent of the image — subtle but noticeable against the blue.
-
-Soft studio lighting, glossy and frosted glass materials, subtle depth of
-field, faint floating particles. Clean, premium, optimistic.
-
-Extremely sharp, 8K, no noise, no grain.
-
-Do NOT include: text, letters, numbers, logos, watermarks, people, hands,
-faces, user interfaces, dark or moody tones.
-```
-
-### Если результат не тот
-
-| Что не так | Что дописать в промпт |
+| Экран | Что видно |
 |---|---|
-| Объекты по центру, лезут в текст | `all objects strictly in the right third, left 60% completely empty` |
-| Слишком пёстро | `limited palette, only two blues and one accent colour` |
-| Слишком тёмное | `bright and airy, high key lighting` |
-| Появились иконки на экранах | `all screens completely blank and switched off` |
-| Акцент забивает синий | `accent colour on one single small object only` |
+| 16:9 — 1366, 1536, 1920, 2560 | всё целиком, предметы правее текста |
+| 16:10 — 1280×800, 1440×900, 1680×1050 | справа обрезается ~2%: краешек кубика |
+| 21:9 и 1360×625 | всё целиком |
+| 4:3 и 5:4 — 1024×768, 1280×1024 | **картинка отключена**, фирменный градиент |
+| уже 900px (телефоны) | картинка отключена, градиент |
 
-## Что делать с готовым файлом
+На 4:3 кадр 21:9 не помещается ни при каком сдвиге: предметы либо срезаются
+на 8–16%, либо уходят под текст.
 
-Пропорции 21:9 и от 2400px по ширине. Сохранить как `public/hero.jpg` и в
-[src/index.css](../src/index.css) раскомментировать строку в `:root`:
+Декоративные круги из кода (`.hero-art`) над картинкой скрыты — у неё свой
+глобус, а центральная точка кругов ложилась на экран телевизора. Там, где
+картинки нет, круги остаются.
 
-```css
---hero-image: url('/hero.jpg');
-```
+## Вуаль и контраст
 
-Сжать перед публикацией — это первое, что грузится с мобильного интернета:
+Вуаль неравномерная: плотнее всего на 38% ширины, у правого края строк
+текста, где начинается свечение вокруг роутера, и сходит на нет к 66%.
+Подзаголовок чисто белый: приглушённый на 82% над этим свечением давал
+3.56–4.28 даже под плотной вуалью.
 
-```bash
-npx sharp-cli --input hero-raw.png --output public/hero.jpg resize 2400 --format jpeg --quality 80
-```
+Замерено по пикселям: фон баннера собран в canvas точно как в CSS, и в
+прямоугольнике каждой строки текста найдена худшая точка.
 
-Целевой вес — до 300 КБ. Проверить: `ls -lh public/hero.jpg`.
+| Экран | Подпись у логотипа | Заголовок (норма 3) | Подзаголовок | Факты |
+|---|---|---|---|---|
+| 1440×900 | 8.33 | 4.67 | 5.01 | 7.64 |
+| 1920×1080 | 8.23 | 4.68 | 5.06 | 7.52 |
+| 1366×768 | 8.52 | 4.80 | 5.25 | 7.85 |
+| 1280×800 | 8.52 | 4.80 | 5.04 | 7.80 |
+| 1360×625 | 8.44 | 5.09 | 8.33 | 7.64 |
+| 2560×1440 | 5.04 | 4.76 | 5.14 | 5.08 |
+| 1024×768 (градиент) | 5.58 | 5.17 | 5.95 | 6.45 |
+| 375×667 (градиент) | 4.80 | 4.76 | 5.45 | 5.67 |
 
-## Про вуаль над фотографией
+Худшее значение из двух языков. Норма 4.5, для заголовка 3.0.
 
-Поверх фона лежит полупрозрачная вуаль — она нужна, чтобы белый заголовок
-читался на любой картинке. Раньше она была почти чёрной и глушила синеву;
-теперь она **синяя** (`--hero-veil`, по умолчанию `#0B52B5`), так что яркий
-цвет оператора сохраняется и с фотографией, и без неё.
+**Если меняете картинку, ширину текста или вуаль — перемеряйте.** Прежний
+расчёт для новой картинки недействителен: с вуалью, подобранной под старую,
+подзаголовок на новой давал 3.56.
 
-Оттенок подобран расчётом, а не на глаз: это примерно самый светлый синий,
-при котором белый текст 14px ещё даёт контраст выше нормы 4.5 даже поверх
-почти белой фотографии. Более светлые варианты вроде `#1976D2` дают всего
-3.4 — подзаголовок и мелкие подписи становятся нечитаемыми.
+## Замена картинки
 
-Замеренный контраст в текстовой зоне:
-
-| Что под вуалью | Десктоп | Мобильный |
-|---|---|---|
-| Фотографии нет | 6.93 | 6.79 |
-| Среднее по яркости фото | 6.79 | 6.79 |
-| Почти белое фото | 5.23 | 5.21 |
-
-Если решите сделать вуаль ещё светлее — придётся менять цвет текста на
-тёмный, белым по такому фону читать нельзя.
+1. Положить исходник в `assets-src/hero-raw.jpg`.
+2. В `scripts/hero-logo-on-tv.py` поправить `SEED` — точку внутри экрана
+   телевизора, и при необходимости `OCCLUDER`.
+3. `python scripts/hero-logo-on-tv.py` и посмотреть контрольный кадр
+   `assets-src/hero-screen-check.png`: красный контур должен лечь на экран.
+4. Перемерить обрезку и контраст.
