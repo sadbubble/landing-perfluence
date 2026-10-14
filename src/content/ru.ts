@@ -94,13 +94,14 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
-      headline: "интернет + ТВ",
+      headline: "300 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV 2026",
-      // Состав заказчик пока не прислал — блоки без цифр.
+      // Состав — с карточки Keremet TV на сайте Казахтелекома (октябрь 2026),
+      // по слову заказчика: в ТЗ этого тарифа нет.
       services: [
-        { icon: "internet", title: "Домашний интернет", summary: "", facts: [], details: [] },
-        { icon: "tv", title: "Телевидение", summary: "", facts: [], details: [] },
+        { icon: "internet", title: "Домашний интернет", summary: "до 300 Мбит/с", facts: [], details: [] },
+        { icon: "tv", title: "Телевидение", summary: "160+ каналов · 7 онлайн-кинотеатров", facts: [], details: [] },
       ],
       price: {
         contract: null,
@@ -368,7 +369,7 @@ export interface TariffService {
   title: string;
   /**
    * Строка под названием: «до 500 Мбит/с». Цифры выделяются. Пустая —
-   * строки нет: так у Keremet TV 2026, чей состав ещё не прислали.
+   * строки нет: для тарифа, чей состав ещё неизвестен.
    */
   summary: string;
   /** Цифра и пояснение: «60 ГБ» — «интернет-трафик». [] — нет таких. */

@@ -91,12 +91,12 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
-      headline: "интернет + ТВ",
+      headline: "300 Мбит/с + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV 2026",
       services: [
-        { icon: "internet", title: "Үй интернеті", summary: "", facts: [], details: [] },
-        { icon: "tv", title: "ТВ", summary: "", facts: [], details: [] },
+        { icon: "internet", title: "Үй интернеті", summary: "300 Мбит/с дейін", facts: [], details: [] },
+        { icon: "tv", title: "ТВ", summary: "160+ арна · 7 онлайн-кинотеатр", facts: [], details: [] },
       ],
       price: {
         contract: null,
