@@ -8,7 +8,7 @@ export const content = {
 
   pageTitle: "Подключение интернета и ТВ — официальный партнёр АО «Казахтелеком»",
 
-  heroTitle: "Домашний интернет, ТВ и SIM-карта от Казахтелекома",
+  heroTitle: "Домашний интернет, ТВ и SIM-карты от Казахтелекома",
   heroSubtitle:
     "Быстрое подключение в удобное время. Надёжная сеть крупнейшего оператора Казахстана — уже в вашем доме.",
   heroCtaLabel: "Оставить заявку",
@@ -74,7 +74,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-promo",
-      headline: "200 Мбит/с + ТВ",
+      headline: "до 200 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV PROMO",
       services: [
@@ -130,7 +130,9 @@ export const content = {
         {
           id: "2sim",
           label: "2 SIM",
-          headline: "интернет + ТВ + 2 SIM",
+          // Неразрывные пробелы: на узкой карточке «2» и «SIM» расходились
+          // по разным строкам. Переносится «+ 2 SIM» целиком.
+          headline: "до 500 Мбит/с + ТВ +\u00a02\u00a0SIM",
           services: [
             {
               icon: "internet",
@@ -171,7 +173,7 @@ export const content = {
         {
           id: "4sim",
           label: "4 SIM",
-          headline: "интернет + ТВ + 4 SIM",
+          headline: "до 500 Мбит/с + ТВ +\u00a04\u00a0SIM",
           services: [
             {
               icon: "internet",

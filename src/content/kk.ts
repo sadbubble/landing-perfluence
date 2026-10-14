@@ -72,7 +72,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-promo",
-      headline: "200 Мбит/с + ТВ",
+      headline: "200 Мбит/с дейін + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV PROMO",
       services: [
@@ -125,7 +125,7 @@ export const content = {
         {
           id: "2sim",
           label: "2 SIM",
-          headline: "интернет + ТВ + 2 SIM",
+          headline: "500 Мбит/с дейін + ТВ +\u00a02\u00a0SIM",
           services: [
             {
               icon: "internet",
@@ -166,7 +166,7 @@ export const content = {
         {
           id: "4sim",
           label: "4 SIM",
-          headline: "интернет + ТВ + 4 SIM",
+          headline: "500 Мбит/с дейін + ТВ +\u00a04\u00a0SIM",
           services: [
             {
               icon: "internet",
