@@ -94,7 +94,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
-      headline: "300 Мбит/с + ТВ",
+      headline: "до 300 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV 2026",
       // Состав — с карточки Keremet TV на сайте Казахтелекома (октябрь 2026),

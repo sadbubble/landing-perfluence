@@ -91,7 +91,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
-      headline: "300 Мбит/с + ТВ",
+      headline: "300 Мбит/с дейін + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV 2026",
       services: [
