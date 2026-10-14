@@ -119,9 +119,9 @@ export const content = {
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
           descriptionList: [
-            "Үй интернеті",
-            "ТВ",
-            "2 SIM ұялы байланыс",
+            "500 Мбит/с дейін интернет",
+            "TV+ Full",
+            "Altel/Activ 2 SIM ұялы байланыс",
           ],
           price: {
             contract: "12 999",
@@ -137,7 +137,7 @@ export const content = {
           descriptionList: [
             "500 Мбит/с дейін интернет",
             "TV+ Full",
-            "4 SIM ұялы байланыс",
+            "Altel/Activ 4 SIM ұялы байланыс",
           ],
           price: {
             contract: "16 999",

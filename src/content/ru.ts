@@ -123,9 +123,9 @@ export const content = {
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
           descriptionList: [
-            "Домашний интернет",
-            "Телевидение",
-            "Мобильная связь на 2 SIM",
+            "Интернет до 500 Мбит/с",
+            "TV+ Full",
+            "Мобильная связь на 2 SIM Altel/Activ",
           ],
           price: {
             contract: "12 999",
@@ -141,7 +141,7 @@ export const content = {
           descriptionList: [
             "Интернет до 500 Мбит/с",
             "TV+ Full",
-            "Мобильная связь на 4 SIM",
+            "Мобильная связь на 4 SIM Altel/Activ",
           ],
           price: {
             contract: "16 999",
