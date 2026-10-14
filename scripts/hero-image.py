@@ -6,15 +6,16 @@
     python scripts/hero-image.py
 
 Вход (папка assets-src вне git, файлы — у заказчика):
-    assets-src/hero-raw.jpg            картинка из Nano Banana 2
+    assets-src/hero-raw.jpg            картинка: 3168px, перерисовка в Gemini
+                                       того же кадра (октябрь 2026)
+    assets-src/hero-raw-1584.jpg       прежний исходник из Nano Banana 2
     assets-src/logo_latin/white.png    белый официальный логотип КТ
 
 Что делает:
 
-1. Увеличивает картинку до 2560px (Lanczos). Исходник — 1584px, и браузер,
-   растягивая его сам, давал «мыло». Резкость добавляется только справа, на
-   предметах: под текстом она усиливала линии глобуса, и подзаголовок падал
-   ниже нормы контраста.
+1. Приводит картинку к 2560px (Lanczos). Прежний исходник был 1584px, его
+   приходилось увеличивать с подкруткой резкости справа, на предметах; новый
+   3168px уменьшается и в резкости не нуждается.
 
 2. «Включает» экран телевизора в фирменном стиле: экран светится градиентом
    из синих гайда, в центре — белый официальный логотип с мягким свечением,
@@ -48,10 +49,15 @@ LOGO_SRC = "assets-src/logo_latin/white.png"
 OUT_IMG = "public/hero.jpg"
 CHECK = "assets-src/hero-screen-check.png"
 
-SEED = (1130, 233)          # точка внутри экрана на hero-raw.jpg 1584x672
+# Координаты ниже — в пикселях кадра шириной GEO_WIDTH. Исходник другого
+# размера (с октября 2026 — 3168px, тот же кадр, перерисованный в Gemini)
+# для поиска экрана и телефона уменьшается до этой ширины: так константы
+# и отступы в screen_quad остаются верными при любом разрешении.
+GEO_WIDTH = 1584
+SEED = (1130, 233)          # точка внутри экрана
 OCCLUDER = (1185, 295)      # правее и ниже — телефон (для подгонки краёв экрана)
 PHONE_SEED = (1252, 381)    # точка на тёмном экране телефона
-PHONE_FRAME = 6             # толщина рамки телефона, px исходника
+PHONE_FRAME = 6             # толщина рамки телефона, px
 
 TARGET_WIDTH = 2560
 BRAND_SCREEN = True         # False — экран остаётся пустым, как в исходнике
@@ -264,21 +270,27 @@ def main():
     raw = Image.open(SRC).convert("RGB")
     w, h = raw.size
     th = round(TARGET_WIDTH * h / w)
-    k = TARGET_WIDTH / w
 
     up = raw.resize((TARGET_WIDTH, th), Image.LANCZOS)
-    sharp = up.filter(ImageFilter.UnsharpMask(radius=1.6, percent=70, threshold=2))
-    # Резкость — только справа, на предметах (44% -> 52% ширины плавно)
-    ramp = Image.linear_gradient("L").rotate(90, expand=True)  # 0 слева -> 255 справа
-    assert ramp.getpixel((0, 128)) < ramp.getpixel((255, 128)), "маска перевёрнута"
-    lo, hi = int(TARGET_WIDTH * 0.44), int(TARGET_WIDTH * 0.52)
-    smask = Image.new("L", (TARGET_WIDTH, th), 0)
-    smask.paste(255, (hi, 0, TARGET_WIDTH, th))
-    smask.paste(ramp.resize((hi - lo, th)), (lo, 0))
-    up = Image.composite(sharp, up, smask)
+    if w < TARGET_WIDTH:
+        # Исходник мельче цели — увеличенный выходит мягким, добавляем
+        # резкость. Только справа, на предметах (44% -> 52% ширины плавно):
+        # под текстом она усиливала линии глобуса, и подзаголовок падал
+        # ниже нормы контраста. Исходник крупнее цели уменьшается и резок
+        # сам — подкрутка дала бы лишь ореолы по краям.
+        sharp = up.filter(ImageFilter.UnsharpMask(radius=1.6, percent=70, threshold=2))
+        ramp = Image.linear_gradient("L").rotate(90, expand=True)  # 0 слева -> 255 справа
+        assert ramp.getpixel((0, 128)) < ramp.getpixel((255, 128)), "маска перевёрнута"
+        lo, hi = int(TARGET_WIDTH * 0.44), int(TARGET_WIDTH * 0.52)
+        smask = Image.new("L", (TARGET_WIDTH, th), 0)
+        smask.paste(255, (hi, 0, TARGET_WIDTH, th))
+        smask.paste(ramp.resize((hi - lo, th)), (lo, 0))
+        up = Image.composite(sharp, up, smask)
 
     if BRAND_SCREEN:
-        up, quad = brand_screen(up, raw, k)
+        # Экран и телефон ищем в кадре шириной GEO_WIDTH — см. константы
+        geo = raw if w == GEO_WIDTH else raw.resize((GEO_WIDTH, round(GEO_WIDTH * h / w)), Image.LANCZOS)
+        up, quad = brand_screen(up, geo, TARGET_WIDTH / GEO_WIDTH)
         print("углы экрана:", np.round(quad, 1).tolist())
 
     up.save(OUT_IMG, quality=88, optimize=True, progressive=True)
