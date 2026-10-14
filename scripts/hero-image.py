@@ -5,6 +5,8 @@
 
     python scripts/hero-image.py
 
+Нужны Pillow, numpy и scipy (scipy — для маски телефона, см. phone_mask).
+
 Вход (папка assets-src вне git, файлы — у заказчика):
     assets-src/hero-raw.jpg            картинка: 3168px, перерисовка в Gemini
                                        того же кадра (октябрь 2026)
@@ -43,6 +45,7 @@ from collections import deque
 
 import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
+from scipy import ndimage
 
 SRC = "assets-src/hero-raw.jpg"
 LOGO_SRC = "assets-src/logo_latin/white.png"
@@ -57,7 +60,12 @@ GEO_WIDTH = 1584
 SEED = (1130, 233)          # точка внутри экрана
 OCCLUDER = (1185, 295)      # правее и ниже — телефон (для подгонки краёв экрана)
 PHONE_SEED = (1252, 381)    # точка на тёмном экране телефона
-PHONE_FRAME = 6             # толщина рамки телефона, px
+# Толщина рамки телефона там, где он заходит на экран ТВ. Замерено по
+# исходнику 3168px: от края тёмного экрана телефона цвет выходит на ровный
+# цвет экрана ТВ на 8.5px — то есть 4.25px кадра GEO_WIDTH. Прежнее
+# значение 6 плюс расширение размытием давало ~7.5: маска заходила за
+# рамку, и по краю телефона проступала полоска старого белого экрана.
+PHONE_FRAME = 4.25
 
 TARGET_WIDTH = 2560
 BRAND_SCREEN = True         # False — экран остаётся пустым, как в исходнике
@@ -183,7 +191,31 @@ def screen_content(cw, ch):
     return canvas.convert("RGB")
 
 
-def brand_screen(up, raw, k):
+def phone_mask(full, size):
+    """Силуэт телефона, перекрывающего угол экрана, — маска размера size.
+
+    Цветом корпус телефона не отделить: его светлая рамка почти совпадает
+    со старым белым экраном ТВ, и первая версия закрасила её синим. Поэтому
+    силуэт строится от тёмного экрана телефона — его ни с чем не спутать —
+    расширенного на толщину рамки.
+
+    Строится в полном разрешении исходника, расширение — по точному
+    расстоянию до экрана, край сглажен на пиксель. Прежняя версия строила
+    его в кадре 1584px размытием с порогом и растягивала: край выходил
+    волнистым и шире рамки, и вдоль телефона шла светлая кайма.
+    """
+    s = full.width / GEO_WIDTH
+    a = np.asarray(full)
+    dark = (a[..., 0] < 140) & (a[..., 2] < 215)
+    labels, _ = ndimage.label(dark)
+    sx, sy = round(PHONE_SEED[0] * s), round(PHONE_SEED[1] * s)
+    screen = labels == labels[sy, sx]
+    dist = ndimage.distance_transform_edt(~screen)
+    alpha = np.clip(PHONE_FRAME * s + 0.5 - dist, 0, 1)
+    return Image.fromarray((alpha * 255).astype("uint8"), "L").resize(size, Image.LANCZOS)
+
+
+def brand_screen(up, raw, k, full):
     pts = screen_pixels(raw)
     quad_raw = screen_quad(pts)
     quad = quad_raw * k
@@ -199,32 +231,7 @@ def brand_screen(up, raw, k):
     ImageDraw.Draw(poly).polygon([tuple(c * ssm) for c in quad], fill=255)
     poly = poly.resize(up.size, Image.LANCZOS)
 
-    # Телефон, перекрывающий угол экрана. Цветом его корпус не отделить:
-    # светлая рамка телефона почти совпадает со старым белым экраном ТВ, и
-    # первая версия закрасила её синим. Поэтому силуэт строится от тёмного
-    # экрана телефона — его ни с чем не спутать — расширенного на толщину
-    # рамки (~5px исходника, замерено сверху и сбоку), со скруглением.
-    rp = raw.load()
-
-    def phone_dark(c):
-        return c[0] < 140 and c[2] < 215
-
-    seen, queue = {PHONE_SEED}, deque([PHONE_SEED])
-    occ = Image.new("L", raw.size, 0)
-    op = occ.load()
-    while queue:
-        x, y = queue.popleft()
-        op[x, y] = 255
-        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            n = (x + dx, y + dy)
-            if n not in seen and 0 <= n[0] < raw.width and 0 <= n[1] < raw.height \
-                    and phone_dark(rp[n]):
-                seen.add(n)
-                queue.append(n)
-    # круглое расширение на рамку: размыть и взять всё, что задето
-    occ = occ.filter(ImageFilter.GaussianBlur(PHONE_FRAME / 2)).point(lambda a: 255 if a > 8 else 0)
-    occ = occ.resize(up.size, Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.0))
-    mask = ImageChops.subtract(poly, occ)
+    mask = ImageChops.subtract(poly, phone_mask(full, up.size))
 
     x0, y0 = np.floor(quad.min(axis=0)).astype(int) - 2
     x1, y1 = np.ceil(quad.max(axis=0)).astype(int) + 2
@@ -290,7 +297,7 @@ def main():
     if BRAND_SCREEN:
         # Экран и телефон ищем в кадре шириной GEO_WIDTH — см. константы
         geo = raw if w == GEO_WIDTH else raw.resize((GEO_WIDTH, round(GEO_WIDTH * h / w)), Image.LANCZOS)
-        up, quad = brand_screen(up, geo, TARGET_WIDTH / GEO_WIDTH)
+        up, quad = brand_screen(up, geo, TARGET_WIDTH / GEO_WIDTH, raw)
         print("углы экрана:", np.round(quad, 1).tolist())
 
     up.save(OUT_IMG, quality=88, optimize=True, progressive=True)
