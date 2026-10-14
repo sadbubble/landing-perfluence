@@ -13,6 +13,8 @@ interface TariffsSectionProps {
   toggleNoContract: string;
   savingLabel: string;
   priceModeHint: string;
+  detailsMore: string;
+  detailsLess: string;
   onSelect: (sel: TariffSelection) => void;
 }
 
@@ -34,6 +36,8 @@ export default function TariffsSection({
   toggleNoContract,
   savingLabel,
   priceModeHint,
+  detailsMore,
+  detailsLess,
   onSelect,
 }: TariffsSectionProps) {
   // По умолчанию показываем цену с контрактом: она ниже, и именно её
@@ -105,6 +109,8 @@ export default function TariffsSection({
                 currency={currency}
                 perMonthShort={perMonthShort}
                 savingLabel={savingLabel}
+                detailsMore={detailsMore}
+                detailsLess={detailsLess}
                 noContractLabel={toggleNoContract}
                 connectLabel={connectLabel}
                 onSelect={onSelect}

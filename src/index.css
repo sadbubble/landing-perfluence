@@ -879,6 +879,111 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   color: var(--brand);
 }
 
+/*
+ * Состав блоками по услугам — пока только у Bereket (см. TariffService).
+ *
+ * Блоки идут на всю ширину карточки и выровнены влево: внутри три уровня
+ * текста, и по центру они читались бы лесенкой. Цифры — --brand-strong:
+ * это синий гайда, на котором проходит мелкий текст (на белом 8.23).
+ * --brand для 13px не годится: 3.33 при норме 4.5.
+ */
+.tcard-services {
+  width: 100%;
+  margin: 16px 0 0;
+  text-align: left;
+}
+.tcard-service {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.tcard-service-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+.tcard-service-body { min-width: 0; }
+.tcard-service-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.tcard-service-summary {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.tcard-service-summary b { color: var(--brand-strong); font-weight: 700; }
+
+/* Цифра слева, пояснение справа — как в карточке Bereket на сайте КТ */
+.tcard-facts { margin: 6px 0 0; }
+.tcard-facts > div {
+  display: grid;
+  grid-template-columns: 4.6em 1fr;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.tcard-facts dt { font-weight: 700; color: var(--brand-strong); white-space: nowrap; }
+/* inline-block обязателен: сброс Tailwind делает все svg блочными */
+.tcard-inf { display: inline-block; vertical-align: -1px; }
+
+/* Текст только для скринридеров: глазом не виден, но читается */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.tcard-facts dd { margin: 0; color: var(--ink-muted); }
+
+.tcard-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 4px;
+  margin-left: 44px;
+  border: none;
+  background: none;
+  color: var(--brand-strong);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tcard-more svg { transition: transform 0.18s ease; }
+.tcard-more[aria-expanded="true"] svg { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .tcard-more svg { transition: none; }
+}
+.tcard-details {
+  margin: 0 0 0 48px;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.tcard-details li + li { margin-top: 6px; }
+
 .tcard-extra {
   margin: 10px 0 0;
   padding: 0;

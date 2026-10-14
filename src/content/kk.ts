@@ -30,6 +30,8 @@ export const content = {
   toggleNoContract: "Келісімшартсыз",
   savingLabel: "үнемдеу",
   priceModeHint: "Келісімшарт айлық төлемді азайтады",
+  detailsMore: "Толығырақ",
+  detailsLess: "Жасыру",
 
   tariffs: [
     {
@@ -118,10 +120,35 @@ export const content = {
           id: "2sim",
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
-          descriptionList: [
-            "500 Мбит/с дейін интернет",
-            "TV+ Full",
-            "Altel/Activ 2 SIM ұялы байланыс",
+          services: [
+            {
+              icon: "internet",
+              title: "Үй интернеті",
+              summary: "500 Мбит/с дейін",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "tv",
+              title: "TV+ Full",
+              summary: "160+ арна · 8 онлайн-кинотеатр",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "mobile",
+              title: "Altel/Activ ұялы байланысы",
+              summary: "2 SIM, әрқайсысында:",
+              facts: [
+                { value: "60 ГБ", label: "интернет-трафик" },
+                { value: "∞ мин", label: "желі ішінде" },
+                { value: "250 мин", label: "басқа операторлар мен қалалық нөмірлерге" },
+              ],
+              details: [
+                "60 ГБ-тан кейін жылдамдық 512 Кбит/с-қа дейін төмендейді",
+                "Әр нөмірге TV+ жазылымы, мобильді трафик есептелмейді",
+              ],
+            },
           ],
           price: {
             contract: "12 999",
@@ -134,10 +161,35 @@ export const content = {
           id: "4sim",
           label: "4 SIM",
           headline: "интернет + ТВ + 4 SIM",
-          descriptionList: [
-            "500 Мбит/с дейін интернет",
-            "TV+ Full",
-            "Altel/Activ 4 SIM ұялы байланыс",
+          services: [
+            {
+              icon: "internet",
+              title: "Үй интернеті",
+              summary: "500 Мбит/с дейін",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "tv",
+              title: "TV+ Full",
+              summary: "160+ арна · 8 онлайн-кинотеатр",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "mobile",
+              title: "Altel/Activ ұялы байланысы",
+              summary: "4 SIM, әрқайсысында:",
+              facts: [
+                { value: "60 ГБ", label: "интернет-трафик" },
+                { value: "∞ мин", label: "желі ішінде" },
+                { value: "250 мин", label: "басқа операторлар мен қалалық нөмірлерге" },
+              ],
+              details: [
+                "60 ГБ-тан кейін жылдамдық 512 Кбит/с-қа дейін төмендейді",
+                "Әр нөмірге TV+ жазылымы, мобильді трафик есептелмейді",
+              ],
+            },
           ],
           price: {
             contract: "16 999",

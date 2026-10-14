@@ -31,6 +31,8 @@ export const content = {
   toggleNoContract: "Без контракта",
   savingLabel: "выгода",
   priceModeHint: "Контракт снижает ежемесячный платёж",
+  detailsMore: "Подробнее",
+  detailsLess: "Свернуть",
 
   tariffs: [
     {
@@ -109,7 +111,8 @@ export const content = {
       headline: "интернет + ТВ + моб. связь",
       tagline: "Для семьи — всё в одном",
       name: "Bereket",
-      // Состав у Bereket свой на каждый вариант SIM — см. simVariants.
+      // Состав у Bereket блоками по услугам, свой на каждый вариант SIM —
+      // см. simVariants и TariffService.
       descriptionList: null,
       price: {
         contract: "12 999",
@@ -122,10 +125,35 @@ export const content = {
           id: "2sim",
           label: "2 SIM",
           headline: "интернет + ТВ + 2 SIM",
-          descriptionList: [
-            "Интернет до 500 Мбит/с",
-            "TV+ Full",
-            "Мобильная связь на 2 SIM Altel/Activ",
+          services: [
+            {
+              icon: "internet",
+              title: "Домашний интернет",
+              summary: "до 500 Мбит/с",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "tv",
+              title: "TV+ Full",
+              summary: "160+ каналов · 8 онлайн-кинотеатров",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "mobile",
+              title: "Мобильная связь Altel/Activ",
+              summary: "2 SIM, в каждой:",
+              facts: [
+                { value: "60 ГБ", label: "интернет-трафик" },
+                { value: "∞ мин", label: "внутри сети" },
+                { value: "250 мин", label: "на номера других операторов и городские" },
+              ],
+              details: [
+                "После 60 ГБ скорость снижается до 512 Кбит/с",
+                "Подписка TV+ к каждому номеру без учёта мобильного трафика",
+              ],
+            },
           ],
           price: {
             contract: "12 999",
@@ -138,10 +166,35 @@ export const content = {
           id: "4sim",
           label: "4 SIM",
           headline: "интернет + ТВ + 4 SIM",
-          descriptionList: [
-            "Интернет до 500 Мбит/с",
-            "TV+ Full",
-            "Мобильная связь на 4 SIM Altel/Activ",
+          services: [
+            {
+              icon: "internet",
+              title: "Домашний интернет",
+              summary: "до 500 Мбит/с",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "tv",
+              title: "TV+ Full",
+              summary: "160+ каналов · 8 онлайн-кинотеатров",
+              facts: [],
+              details: [],
+            },
+            {
+              icon: "mobile",
+              title: "Мобильная связь Altel/Activ",
+              summary: "4 SIM, в каждой:",
+              facts: [
+                { value: "60 ГБ", label: "интернет-трафик" },
+                { value: "∞ мин", label: "внутри сети" },
+                { value: "250 мин", label: "на номера других операторов и городские" },
+              ],
+              details: [
+                "После 60 ГБ скорость снижается до 512 Кбит/с",
+                "Подписка TV+ к каждому номеру без учёта мобильного трафика",
+              ],
+            },
           ],
           price: {
             contract: "16 999",
@@ -286,9 +339,38 @@ export interface SimVariant {
   label: string;
   /** Своя строка сути: у 4 SIM она отличается от 2 SIM. */
   headline: string;
-  /** Свой состав: у 4 SIM это TV+ Full и 4 SIM, у 2 SIM — обычное ТВ. */
-  descriptionList: string[];
+  /** Состав блоками по услугам: интернет, ТВ, мобильная связь. */
+  services: TariffService[];
   price: TariffPrice;
+}
+
+/**
+ * Услуга в составе тарифа — блок с иконкой, названием и цифрами.
+ *
+ * Bereket — тариф из трёх услуг, и список из трёх строк с галочками не
+ * давал понять, что в каждую входит: сколько гигабайт на SIM, сколько
+ * каналов. Цифры взяты с карточки Bereket на сайте Казахтелекома
+ * (октябрь 2026), оформление своё — белая карточка по макету заказчика.
+ *
+ * Пока так устроен только Bereket. Остальные тарифы на descriptionList.
+ */
+export interface TariffService {
+  /**
+   * Иконка: "internet", "tv" или "mobile" — рисунки в TariffCard.tsx.
+   * Строка, а не перечисление: объект текстов не типизирован, и TypeScript
+   * расширяет значение до string. Неизвестное имя — блок без иконки.
+   */
+  icon: string;
+  title: string;
+  /** Строка под названием: «до 500 Мбит/с». Цифры выделяются. */
+  summary: string;
+  /** Цифра и пояснение: «60 ГБ» — «интернет-трафик». [] — нет таких. */
+  facts: { value: string; label: string }[];
+  /**
+   * Мелкие условия, спрятанные под «Подробнее». Без этого карточка
+   * Bereket вытягивалась бы вдвое, а с ней — весь ряд: высота общая.
+   */
+  details: string[];
 }
 
 export interface Tariff {

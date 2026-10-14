@@ -201,6 +201,8 @@ export default function Landing() {
           toggleNoContract={c.toggleNoContract}
           savingLabel={c.savingLabel}
           priceModeHint={c.priceModeHint}
+          detailsMore={c.detailsMore}
+          detailsLess={c.detailsLess}
           onSelect={handleTariffSelect}
         />
 
