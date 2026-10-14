@@ -10,7 +10,7 @@ interface TariffCardProps {
   tagline?: string | null;
   headline: string;
   /** Состав тарифа (ТЗ п.4). У Bereket берётся из выбранного варианта SIM. */
-  descriptionList?: string[] | null;
+  services?: TariffService[] | null;
   price: TariffPrice;
   /** Варианты по числу SIM. Есть только у Bereket, у остальных null. */
   simVariants?: SimVariant[] | null;
@@ -20,7 +20,7 @@ interface TariffCardProps {
   currency: string;
   perMonthShort: string;
   savingLabel: string;
-  /** «Подробнее» / «Свернуть» у мелких условий в блоках услуг. */
+  /** «Подробнее» / «Свернуть» у блоков услуг с цифрами. */
   detailsMore: string;
   detailsLess: string;
   noContractLabel: string;
@@ -85,77 +85,81 @@ function FactValue({ value }: { value: string }) {
 }
 
 /**
- * Состав тарифа блоками по услугам — пока только у Bereket.
+ * Состав тарифа блоками по услугам: иконка, название, цифры.
  *
- * Мелкие условия (скорость после лимита, подписка к номерам) спрятаны под
- * «Подробнее»: раскрытые, они вытянули бы карточку, а за ней весь ряд —
- * высота карточек в ряду общая. Кнопка 44px по высоте, как все цели под
- * палец в проекте.
+ * Если у блока есть цифры или условия (facts, details), всё ниже названия
+ * прячется под «Подробнее». Так у мобильной связи Bereket: раскрытая, она
+ * вытягивала карточку почти до 900px, а с ней весь ряд — высота карточек
+ * в ряду общая. Кнопка 44px по высоте, как все цели под палец в проекте.
  */
-function ServiceBlocks({
-  services,
+function ServiceBlock({
+  service: s,
   moreLabel,
   lessLabel,
 }: {
-  services: TariffService[];
+  service: TariffService;
   moreLabel: string;
   lessLabel: string;
 }) {
   const [open, setOpen] = useState(false);
-  const detailsId = useId();
-  const details = services.flatMap((s) => s.details);
+  const bodyId = useId();
+  const collapsible = s.facts.length > 0 || s.details.length > 0;
+
+  const body = (
+    <>
+      {s.summary && <p className="tcard-service-summary">{boldNumbers(s.summary)}</p>}
+      {s.facts.length > 0 && (
+        <dl className="tcard-facts">
+          {s.facts.map((f) => (
+            <div key={f.value}>
+              <dt><FactValue value={f.value} /></dt>
+              <dd>{f.label}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {s.details.length > 0 && (
+        <ul className="tcard-details">
+          {s.details.map((d) => (
+            <li key={d}>{d}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
 
   return (
-    <div className="tcard-services">
-      {services.map((s) => (
-        <div className="tcard-service" key={s.icon}>
-          {SERVICE_ICONS[s.icon] && (
-            <span className="tcard-service-icon" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                {SERVICE_ICONS[s.icon]}
-              </svg>
-            </span>
-          )}
-          <div className="tcard-service-body">
-            <p className="tcard-service-title">{s.title}</p>
-            <p className="tcard-service-summary">{boldNumbers(s.summary)}</p>
-            {s.facts.length > 0 && (
-              <dl className="tcard-facts">
-                {s.facts.map((f) => (
-                  <div key={f.value}>
-                    <dt><FactValue value={f.value} /></dt>
-                    <dd>{f.label}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </div>
-        </div>
-      ))}
-
-      {details.length > 0 && (
-        <>
-          <button
-            type="button"
-            className="tcard-more"
-            aria-expanded={open}
-            aria-controls={detailsId}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? lessLabel : moreLabel}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2"
-                strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <ul className="tcard-details" id={detailsId} hidden={!open}>
-            {details.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
-        </>
+    <div className="tcard-service">
+      {SERVICE_ICONS[s.icon] && (
+        <span className="tcard-service-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            {SERVICE_ICONS[s.icon]}
+          </svg>
+        </span>
       )}
+      <div className="tcard-service-body">
+        <p className="tcard-service-title">{s.title}</p>
+        {!collapsible && body}
+        {collapsible && (
+          <>
+            <div id={bodyId} hidden={!open}>{body}</div>
+            <button
+              type="button"
+              className="tcard-more"
+              aria-expanded={open}
+              aria-controls={bodyId}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? lessLabel : moreLabel}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2"
+                  strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -181,7 +185,7 @@ export default function TariffCard({
   name,
   tagline,
   headline,
-  descriptionList,
+  services,
   price,
   simVariants,
   badge,
@@ -202,9 +206,8 @@ export default function TariffCard({
   const variant = simVariants?.find((v) => v.id === simId) ?? null;
   const activePrice = variant ? variant.price : price;
   const activeHeadline = variant ? variant.headline : headline;
-  // Состав: у Bereket блоками по услугам, у остальных — списком строк.
-  const services = variant ? variant.services : [];
-  const features = variant ? [] : (descriptionList ?? []);
+  // Состав: у Bereket свой на каждый вариант SIM, у остальных общий.
+  const activeServices = variant ? variant.services : (services ?? []);
 
   /*
    * Цена строго из выбранного режима. Раньше у тарифа с одной ценой она
@@ -255,28 +258,14 @@ export default function TariffCard({
       </div>
       <div className="tcard-per">{perMonthShort}</div>
 
-      {services.length > 0 && (
-        <ServiceBlocks services={services} moreLabel={detailsMore} lessLabel={detailsLess} />
+      {activeServices.length > 0 && (
+        <div className="tcard-services">
+          {activeServices.map((s) => (
+            <ServiceBlock key={s.icon} service={s} moreLabel={detailsMore} lessLabel={detailsLess} />
+          ))}
+        </div>
       )}
 
-      {features.length > 0 && (
-        <ul className="tcard-features">
-          {features.map((f) => (
-            <li key={f}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M3 8.5 L6.3 11.8 L13 5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {f}
-            </li>
-          ))}
-        </ul>
-      )}
 
       {showContract && saving > 0 && (
         <span className="tcard-saving">

@@ -848,39 +848,7 @@ td.nowrap, th.nowrap { white-space: nowrap; }
 .tcard-note svg { flex-shrink: 0; opacity: 0.7; }
 
 /*
- * Состав тарифа — колонка «Состав / условия» из таблицы ТЗ п.4.
- *
- * Пункты выровнены по левому краю, а сам список отцентрован блоком: в
- * карточке всё по центру, но текст, набранный в центр, читается заметно
- * хуже — глазу негде зацепиться за начало строки.
- *
- * Галочка декоративная и спрятана от скринридеров: смысл несёт текст.
- */
-.tcard-features {
-  width: fit-content;
-  margin: 14px auto 0;
-  padding: 0;
-  list-style: none;
-  text-align: left;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--ink-muted);
-}
-.tcard-features li {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  margin-top: 5px;
-}
-.tcard-features li:first-child { margin-top: 0; }
-.tcard-features svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: var(--brand);
-}
-
-/*
- * Состав блоками по услугам — пока только у Bereket (см. TariffService).
+ * Состав тарифа блоками по услугам (см. TariffService в ru.ts).
  *
  * Блоки идут на всю ширину карточки и выровнены влево: внутри три уровня
  * текста, и по центру они читались бы лесенкой. Цифры — --brand-strong:
@@ -960,7 +928,8 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   gap: 4px;
   min-height: 44px;
   padding: 0 4px;
-  margin-left: 44px;
+  /* Текст кнопки встаёт ровно под названием блока */
+  margin: 0 0 -10px -4px;
   border: none;
   background: none;
   color: var(--brand-strong);
@@ -975,7 +944,7 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   .tcard-more svg { transition: none; }
 }
 .tcard-details {
-  margin: 0 0 0 48px;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
   font-size: 12.5px;

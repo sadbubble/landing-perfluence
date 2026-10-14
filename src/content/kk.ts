@@ -39,7 +39,9 @@ export const content = {
       headline: "200 Мбит/с дейін",
       tagline: "Үй мен оқуға",
       name: "Интернет 200",
-      descriptionList: ["Үй интернеті"],
+      services: [
+        { icon: "internet", title: "Үй интернеті", summary: "200 Мбит/с дейін", facts: [], details: [] },
+      ],
       price: {
         contract: null,
         noContract: "7 999",
@@ -55,7 +57,9 @@ export const content = {
       headline: "500 Мбит/с дейін",
       tagline: "Жылдамдық қажет болғандарға",
       name: "Интернет 500",
-      descriptionList: ["Үй интернеті"],
+      services: [
+        { icon: "internet", title: "Үй интернеті", summary: "500 Мбит/с дейін", facts: [], details: [] },
+      ],
       price: {
         contract: "9 320",
         noContract: "9 999",
@@ -71,10 +75,9 @@ export const content = {
       headline: "200 Мбит/с + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV PROMO",
-      descriptionList: [
-        "Үй интернеті",
-        "160-тан астам телеарна",
-        "7 онлайн-кинотеатр",
+      services: [
+        { icon: "internet", title: "Үй интернеті", summary: "200 Мбит/с", facts: [], details: [] },
+        { icon: "tv", title: "ТВ", summary: "160+ арна · 7 онлайн-кинотеатр", facts: [], details: [] },
       ],
       price: {
         contract: "5 699",
@@ -91,7 +94,10 @@ export const content = {
       headline: "интернет + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV 2026",
-      descriptionList: ["Үй интернеті", "ТВ"],
+      services: [
+        { icon: "internet", title: "Үй интернеті", summary: "", facts: [], details: [] },
+        { icon: "tv", title: "ТВ", summary: "", facts: [], details: [] },
+      ],
       price: {
         contract: null,
         noContract: "8 999",
@@ -108,7 +114,7 @@ export const content = {
       tagline: "Отбасыға — бәрі бір жерде",
       name: "Bereket",
       // Bereket-тің құрамы SIM нұсқасына қарай әртүрлі — simVariants қараңыз.
-      descriptionList: null,
+      services: null,
       price: {
         contract: "12 999",
         noContract: "13 999",
