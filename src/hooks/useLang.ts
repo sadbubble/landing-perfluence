@@ -2,7 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 
 export type Lang = "ru" | "kk";
 
-const STORAGE_KEY = "lang";
+/*
+ * С приставкой: на telecom.kz localStorage общий для всего сайта
+ * Казахтелекома, и голый ключ «lang» легко совпал бы с их собственным —
+ * мы переписывали бы язык их сайта, а они наш.
+ */
+const STORAGE_KEY = "perfluence.lang";
 /*
  * Казахский по умолчанию — решение заказчика. Русский остаётся у тех, кто
  * сам переключился: выбор пишется в localStorage только по нажатию RU/KZ,

@@ -1,3 +1,5 @@
+import { withBase } from "../lib/base";
+
 interface Step {
   number: string;
   title: string;
@@ -77,7 +79,7 @@ function StepCard({ step, isLast }: { step: Step; isLast: boolean }) {
              файла фон просто не рисуется — остаётся номер шага. */
           <div
             className="step-art"
-            style={{ backgroundImage: `url(${step.image})` }}
+            style={{ backgroundImage: `url(${withBase(step.image)})` }}
             aria-hidden="true"
           />
         ) : (

@@ -20,6 +20,22 @@
         "--strictPort"
       ],
       "port": 4200
+    },
+    {
+      "name": "preview-telecom",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "preview",
+        "--base",
+        "/perfluence/",
+        "--outDir",
+        "dist-telecom",
+        "--port",
+        "4200",
+        "--strictPort"
+      ],
+      "port": 4200
     }
   ]
 }

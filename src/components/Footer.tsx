@@ -1,3 +1,5 @@
+import { withBase } from "../lib/base";
+
 interface FooterProps {
   company: string;
   partnerBadge: string;
@@ -101,7 +103,7 @@ export default function Footer({
           className="footer-right"
         >
           <a
-            href={privacyPath}
+            href={withBase(privacyPath)}
             style={{
               color: "color-mix(in srgb, var(--footer-ink) 60%, transparent)",
               textDecoration: "underline",

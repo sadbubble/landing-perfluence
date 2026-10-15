@@ -17,8 +17,21 @@
  * серверной настройки — на первом этапе он надёжнее.
  */
 
-/** Ключ хранения. Совпадает с ключом в адресе — так велит ТЗ. */
-const STORAGE_KEY = "manager";
+import { BASE, pathWithinBase } from "./base";
+
+/** Ключ менеджера в адресе: ?manager=anna. Задан ТЗ. */
+const URL_KEY = "manager";
+
+/**
+ * Ключ хранения в localStorage.
+ *
+ * ТЗ «Передача менеджера и тарифа» предлагает хранить под тем же именем,
+ * что и в адресе, — «manager». Но на telecom.kz localStorage общий для
+ * всего сайта Казахтелекома, и голое «manager» могло совпасть с их
+ * собственным ключом: тогда заявка ушла бы с чужим значением. Поэтому с
+ * приставкой — решение заказчика (октябрь 2026). Ключ в адресе прежний.
+ */
+const STORAGE_KEY = "perfluence.manager";
 
 /** Ключ прежней версии. Читается, чтобы не потерять уже привязанных людей. */
 const LEGACY_KEY = "perfluence.dealer_code";
@@ -52,8 +65,9 @@ function clean(code: string | null | undefined): string | null {
 export function captureAttribution(): Attribution {
   const params = new URLSearchParams(window.location.search);
 
-  const fromManager = params.get(STORAGE_KEY);
-  const fromPath = window.location.pathname.match(/^\/d\/([^/?#]+)/i)?.[1] ?? null;
+  const fromManager = params.get(URL_KEY);
+  // Путь без префикса: на telecom.kz адрес вида /perfluence/d/КОД
+  const fromPath = pathWithinBase().match(/^\/d\/([^/?#]+)/i)?.[1] ?? null;
   const fromQuery = params.get("ref") ?? params.get("d");
 
   const fromUrl = clean(fromManager) ?? clean(fromPath) ?? clean(fromQuery);
@@ -101,7 +115,7 @@ export function readStored(): string | null {
 
 /** Собрать персональную ссылку менеджера. */
 export function buildDealerLink(code: string, origin = window.location.origin): string {
-  return `${origin}/?${STORAGE_KEY}=${encodeURIComponent(code)}`;
+  return `${origin}${BASE}?${URL_KEY}=${encodeURIComponent(code)}`;
 }
 
 /**

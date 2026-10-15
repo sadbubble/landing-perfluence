@@ -1,3 +1,5 @@
+import { withBase } from "../lib/base";
+
 interface HeroProps {
   /**
    * Связка «логотип Казахтелекома | Официальный партнёр» над заголовком.
@@ -97,7 +99,7 @@ export default function Hero({
           <p className="hero-partner">
             <img
               className="hero-partner-logo"
-              src="/kt-logo-white.png"
+              src={withBase("/kt-logo-white.png")}
               alt={logoAlt}
               width={475}
               height={72}
