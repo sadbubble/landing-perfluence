@@ -58,10 +58,13 @@ export default function Landing() {
 
   /**
    * Форма Qbox открывается рамкой прямо на странице — человек с лендинга
-   * не уходит, и параметры в адресной строке не мелькают. Здесь лежит её
-   * адрес, пока окно открыто; null — окно закрыто.
+   * не уходит, и параметры в адресной строке не мелькают. Здесь лежат её
+   * адреса, пока окно открыто; null — окно закрыто.
+   *
+   * embed — для рамки, direct — та же форма с теми же менеджером, тарифом и
+   * языком для запасной ссылки «Откройте её отдельно» под рамкой.
    */
-  const [formUrl, setFormUrl] = useState<string | null>(null);
+  const [form, setForm] = useState<{ embed: string; direct: string } | null>(null);
 
   /**
    * Открыть форму Qbox.
@@ -81,7 +84,10 @@ export default function Landing() {
     const manager = attribution.dealerCode;
 
     if (canEmbedForm()) {
-      setFormUrl(buildEmbedUrl(product, manager, lang));
+      setForm({
+        embed: buildEmbedUrl(product, manager, lang),
+        direct: buildFormUrl(product, manager, lang),
+      });
       return;
     }
 
@@ -217,7 +223,7 @@ export default function Landing() {
         />
       </main>
 
-      <Modal open={formUrl !== null} onClose={() => setFormUrl(null)} closeLabel={c.closeLabel}>
+      <Modal open={form !== null} onClose={() => setForm(null)} closeLabel={c.closeLabel}>
         <h2 className="qbox-title">{c.formTitle}</h2>
         {/*
           * Форма Qbox чужая и живёт на их домене, поэтому здесь рамка, а не
@@ -229,10 +235,10 @@ export default function Landing() {
           *     не видит содержимое чужого домена.
           * Крестик и клик по затемнению работают всегда.
           */}
-        {formUrl && (
+        {form && (
           <iframe
             className="qbox-frame"
-            src={formUrl}
+            src={form.embed}
             title={c.formTitle}
             /*
               * sandbox намеренно не ставим. В коде, присланном из Qbox, его
@@ -242,6 +248,23 @@ export default function Landing() {
               */
           />
         )}
+        {/*
+          * Запасной выход, если рамка не загрузилась. Встраивание может
+          * запретить не только Qbox, но и сам сайт, на котором лежит лендинг
+          * (политика безопасности telecom.kz, адрес www.telecom.kz вместо
+          * telecom.kz). Окно при этом выглядит рабочим, а заявку отправить
+          * нельзя, и узнать об этом со страницы мы не можем: содержимое
+          * чужой рамки нам не видно. Ссылка ведёт на ту же форму на сайте
+          * Qbox — заявка доедет с тем же менеджером и тарифом.
+          */}
+        {form && (
+          <p className="qbox-fallback">
+            {c.formFallbackLead}{" "}
+            <a href={form.direct} target="_blank" rel="noopener">
+              {c.formFallbackLink}
+            </a>
+          </p>
+        )}
       </Modal>
 
       {showPicker && <ThemePicker current={theme} />}
@@ -249,8 +272,6 @@ export default function Landing() {
       <Footer
         company={c.footerCompany}
         partnerBadge={c.partnerBadge}
-        privacyLabel={c.footerPrivacy}
-        privacyPath={c.privacyPath}
       />
     </div>
   );

@@ -66,7 +66,7 @@ export function captureAttribution(): Attribution {
   const params = new URLSearchParams(window.location.search);
 
   const fromManager = params.get(URL_KEY);
-  // Путь без префикса: на telecom.kz адрес вида /perfluence/d/КОД
+  // Путь без папки лендинга — см. lib/base.ts
   const fromPath = pathWithinBase().match(/^\/d\/([^/?#]+)/i)?.[1] ?? null;
   const fromQuery = params.get("ref") ?? params.get("d");
 

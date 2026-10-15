@@ -272,6 +272,8 @@ export const content = {
   ctaButton: "Оставить заявку",
   closeLabel: "Закрыть",
   formTitle: "Оставить заявку",
+  formFallbackLead: "Форма не загрузилась?",
+  formFallbackLink: "Откройте её отдельно",
   formSubtitle:
     "Заполните форму — мы свяжемся с вами и оформим подключение.",
   labelPhone: "Номер мобильного телефона",
@@ -286,7 +288,6 @@ export const content = {
   placeholderComment: "Дополнительные пожелания (необязательно)",
   consentText: "Согласен на обработку ",
   consentLink: "персональных данных",
-  privacyPath: "/privacy",
   submitLabel: "Отправить заявку",
   submittingLabel: "Отправка...",
   successTitle: "Спасибо!",
@@ -302,7 +303,6 @@ export const content = {
   changeTariffLabel: "Изменить",
 
   footerCompany: "ТОО «Perfluence»",
-  footerPrivacy: "Политика обработки персональных данных",
 };
 
 export type TariffSlug =

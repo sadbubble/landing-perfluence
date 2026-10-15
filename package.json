@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "build:telecom": "tsc --noEmit && vite build --base /perfluence/ --outDir dist-telecom",
+    "build:telecom": "tsc --noEmit && vite build --base ./ --outDir dist-telecom",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

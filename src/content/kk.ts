@@ -265,6 +265,8 @@ export const content = {
   ctaButton: "Өтінім қалдыру",
   closeLabel: "Жабу",
   formTitle: "Өтінім қалдыру",
+  formFallbackLead: "Форма жүктелмеді ме?",
+  formFallbackLink: "Оны бөлек ашыңыз",
   formSubtitle:
     "Форманы толтырыңыз — біз сізбен хабарласып, қосылуды рәсімдейміз.",
   labelPhone: "Ұялы телефон нөмірі",
@@ -279,7 +281,6 @@ export const content = {
   placeholderComment: "Қосымша тілектер (міндетті емес)",
   consentText: "Мен ",
   consentLink: "дербес деректерді өңдеуге келісемін",
-  privacyPath: "/privacy",
   submitLabel: "Өтінімді жіберу",
   submittingLabel: "Жіберілуде...",
   successTitle: "Рахмет!",
@@ -295,7 +296,6 @@ export const content = {
   changeTariffLabel: "Өзгерту",
 
   footerCompany: "«Perfluence» ЖШС",
-  footerPrivacy: "Дербес деректерді өңдеу саясаты",
 };
 
 export type TariffSlug = "internet-200" | "internet-500" | "keremet-tv-promo" | "bereket";

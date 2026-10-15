@@ -36,6 +36,18 @@
         "--strictPort"
       ],
       "port": 4200
+    },
+    {
+      "name": "static-4200",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4200",
+        "--directory",
+        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/a0981d68-b0e5-4bd2-bec9-d43197146fc7/scratchpad/deploy-test"
+      ],
+      "port": 4200
     }
   ]
 }

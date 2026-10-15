@@ -1645,6 +1645,23 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   background: var(--surface);
 }
 
+/* Запасная ссылка под рамкой — см. Landing.tsx. Цель под палец 44px. */
+.qbox-fallback {
+  margin: 6px 0 -10px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ink-muted);
+}
+.qbox-fallback a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--brand-strong);
+  font-weight: 700;
+}
+
 /*
  * Крестик 44×44, а не 40: это норма для целей под палец в проекте, и здесь
  * она особенно важна. С тех пор как в окне лежит чужая рамка, Esc его не

@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Интернет және ТВ қосу — АО «Қазақтелеком»-ның ресми серіктесі</title>
     <meta name="description" content="Домашний интернет и телевидение от Казахтелекома. Оставьте заявку — подключим в удобное время." />
+    <script>
+      /*
+       * Адрес папки без завершающего слэша (/perfluence вместо /perfluence/):
+       * относительные пути к файлам отсчитались бы от корня сайта, и
+       * страница осталась бы без стилей и скриптов. Добавляем слэш.
+       */
+      if (!/\/$/.test(location.pathname) && !/\.[a-z0-9]+$/i.test(location.pathname))
+        location.replace(location.pathname + "/" + location.search + location.hash);
+    </script>
   </head>
   <body>
     <div id="root"></div>

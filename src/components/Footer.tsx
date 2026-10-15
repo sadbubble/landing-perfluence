@@ -1,17 +1,11 @@
-import { withBase } from "../lib/base";
-
 interface FooterProps {
   company: string;
   partnerBadge: string;
-  privacyLabel: string;
-  privacyPath: string;
 }
 
 export default function Footer({
   company,
   partnerBadge,
-  privacyLabel,
-  privacyPath,
 }: FooterProps) {
   return (
     <footer
@@ -94,34 +88,6 @@ export default function Footer({
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-          }}
-          className="footer-right"
-        >
-          <a
-            href={withBase(privacyPath)}
-            style={{
-              color: "color-mix(in srgb, var(--footer-ink) 60%, transparent)",
-              textDecoration: "underline",
-              fontSize: "13px",
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--footer-ink)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.6)"; }}
-          >
-            {privacyLabel}
-          </a>
-          {/*
-            * Нижняя строка справа пуста намеренно. Здесь был копирайт
-            * ТОО «Perfluence» — спорный на странице, которая живёт на домене
-            * Казахтелекома, — потом телефон, который заказчику не понравился.
-            * Что сюда ставить, решится позже.
-            */}
-        </div>
       </div>
 
       <style>{`
