@@ -83,99 +83,6 @@
   --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-/* =======================================================================
- * ВАРИАНТЫ ОФОРМЛЕНИЯ
- *
- * Руководитель попросил уйти от «казахтелекомовского» вида: лендинг
- * делается для ТОО «Perfluence», а не для самого оператора. Ниже три
- * альтернативные палитры. Переключаются атрибутом data-theme на <html>,
- * вся вёрстка при этом не меняется — она работает только через токены.
- *
- * Обязательная плашка об официальном партнёрстве остаётся во всех
- * вариантах: это требование ТЗ п.3, а не элемент оформления.
- * ======================================================================= */
-
-/* Тёплый сервис — человечный, «бытовой», без корпоративного холода. */
-[data-theme="warm"] {
-  --brand:        #C2410C;
-  --brand-dark:   #9A3412;
-  --brand-soft:   #FDEEE4;
-  --ink:          #2A1F1A;
-  --ink-muted:    #6B5A50;
-  --surface:      #FFFFFF;
-  --bg:           #FBF7F2;
-  --line:         #EADFD4;
-  --danger:       #B91C1C;
-  --success:      #15803D;
-  --footer-bg:    #2A1F1A;
-  --footer-ink:   #FFF7F0;
-  --on-brand:     #FFFFFF;
-  --hero-veil:    #5A2A12;
-  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
-     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
-     на контраст и смотрится цельно. */
-  --hero-image:   none;
-  --radius:       20px;
-  --shadow-sm:    0 2px 8px rgba(42,31,26,0.06);
-  --shadow-md:    0 6px 24px rgba(42,31,26,0.10);
-  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-/* Тёмный премиум — контрастный, «технологичный», хорошо смотрится в сторис. */
-[data-theme="night"] {
-  --brand:        #6C8CFF;
-  /* В тёмной теме «тёмный» оттенок бренда наоборот светлее: он работает
-     и как ховер кнопки, и как текст на подложке --brand-soft. */
-  --brand-dark:   #9AAEFF;
-  --brand-soft:   #1B2333;
-  --ink:          #E9EEF5;
-  --ink-muted:    #94A3B8;
-  --surface:      #161C26;
-  --bg:           #0D1117;
-  --line:         #263041;
-  --danger:       #FF7A70;
-  --success:      #4ADE80;
-  --footer-bg:    #080B10;
-  --footer-ink:   #E9EEF5;
-  /* На ярком акценте тёмной темы белый текст нечитаем — берём тёмный. */
-  --on-brand:     #0D1117;
-  --hero-veil:    #0A1020;
-  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
-     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
-     на контраст и смотрится цельно. */
-  --hero-image:   none;
-  --radius:       14px;
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.40);
-  --shadow-md:    0 8px 28px rgba(0,0,0,0.55);
-  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-/* Строгий минимал — монохром, чёрные кнопки, мелкие скругления. */
-[data-theme="minimal"] {
-  --brand:        #111827;
-  --brand-dark:   #000000;
-  --brand-soft:   #F2F2F0;
-  --ink:          #0B0F14;
-  --ink-muted:    #55606B;
-  --surface:      #FFFFFF;
-  --bg:           #F6F6F4;
-  --line:         #E3E3E0;
-  --danger:       #B42318;
-  --success:      #15803D;
-  --footer-bg:    #0B0F14;
-  --footer-ink:   #FFFFFF;
-  --on-brand:     #FFFFFF;
-  --hero-veil:    #14181F;
-  /* Фотография снята с производства в этой теме: снимок синий, под вуалью
-     другого тона он выглядел бы случайным. Остаётся градиент — он проверен
-     на контраст и смотрится цельно. */
-  --hero-image:   none;
-  --radius:       8px;
-  --shadow-sm:    0 1px 2px rgba(11,15,20,0.05);
-  --shadow-md:    0 2px 8px rgba(11,15,20,0.07);
-  --font:         'Helvetica Neue Web', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 html, body, #root {
   height: 100%;
 }
@@ -197,125 +104,10 @@ body {
 ::-webkit-scrollbar-thumb { background: #c1cdd6; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
 
-/* Honeypot field - visually hidden, NOT display:none */
-.visually-hidden-honeypot {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
-
-/* =======================================================================
- * Ниже — служебные экраны: панель сотрудников и текстовые страницы.
- * Лендинг их не использует; токены :root общие, поэтому смена фирменного
- * стиля меняет и лендинг, и админку одновременно.
- * ======================================================================= */
-
-/* --- Админка ------------------------------------------------------------ */
-
-.adm { max-width: 1400px; margin: 0 auto; padding: 24px 20px 64px; }
-
-.adm-top {
-  display: flex; align-items: center; gap: 16px;
-  flex-wrap: wrap; margin-bottom: 20px;
-}
-.adm-top h1 { font-size: 22px; margin: 0; }
-.adm-top .spacer { flex: 1; }
-.adm-user { color: var(--ink-muted); font-size: 14px; }
-
-.adm-tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
-.adm-tab {
-  padding: 9px 16px; border: 0; border-radius: 999px; cursor: pointer;
-  background: transparent; color: var(--ink-muted); font: inherit;
-}
-.adm-tab[aria-selected="true"] { background: var(--brand); color: #fff; }
-
-.card {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
-}
-
-.filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
-.field { display: flex; flex-direction: column; gap: 4px; }
-.field label { font-size: 12px; color: var(--ink-muted); }
-
-input, select, textarea, button { font: inherit; }
-input, select, textarea {
-  padding: 9px 11px; border: 1px solid var(--line);
-  border-radius: 10px; background: var(--surface); color: var(--ink);
-}
-input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand);
-}
-
-.btn {
-  padding: 10px 18px; border: 0; border-radius: 10px; cursor: pointer;
-  background: var(--brand); color: #fff; font-weight: 600;
-}
-.btn:hover:not(:disabled) { background: var(--brand-dark); }
-.btn:disabled { opacity: .5; cursor: not-allowed; }
-.btn-ghost { background: transparent; color: var(--brand); border: 1px solid var(--line); }
-.btn-ghost:hover:not(:disabled) { background: var(--brand-soft); color: var(--brand-dark); }
-.btn-sm { padding: 6px 12px; font-size: 13px; font-weight: 500; }
-
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-muted); white-space: nowrap; }
-tbody tr:hover { background: var(--brand-soft); }
-td.nowrap, th.nowrap { white-space: nowrap; }
-
-.badge {
-  display: inline-block; padding: 3px 10px; border-radius: 999px;
-  font-size: 12px; font-weight: 600; white-space: nowrap;
-}
-.st-new        { background: #e8effa; color: #23508f; }
-.st-in_progress{ background: #fff3d6; color: #8a6300; }
-.st-sale       { background: #e2f5ea; color: var(--success); }
-.st-refused    { background: #fbe6e6; color: var(--danger); }
-.st-no_answer  { background: #eef0f2; color: var(--ink-muted); }
-.st-duplicate  { background: #f0e9fb; color: #6b46c1; }
-
-.stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 20px; min-width: 130px; }
-.stat b { display: block; font-size: 26px; line-height: 1.2; }
-.stat span { font-size: 13px; color: var(--ink-muted); }
-
-.muted { color: var(--ink-muted); }
-.error { color: var(--danger); }
-.empty { padding: 40px; text-align: center; color: var(--ink-muted); }
-
-/* --- Экран входа -------------------------------------------------------- */
-
-.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
-.login-card { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
-.login-card h1 { font-size: 20px; margin: 0 0 4px; }
-.login-card .field { margin-top: 16px; }
-.login-card input { width: 100%; }
-.login-card .btn { width: 100%; margin-top: 20px; }
-
-/* --- Текстовые страницы (политика ПДн) ---------------------------------- */
-
-.doc {
-  max-width: 720px; margin: 0 auto; padding: 32px 20px 72px;
-  background: var(--surface); min-height: 100vh;
-}
-.doc-back { display: inline-block; margin-bottom: 24px; color: var(--brand); text-decoration: none; }
-.doc-back:hover { color: var(--brand-dark); text-decoration: underline; }
-.doc h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
-.doc h2 { font-size: 17px; margin: 28px 0 8px; }
-.doc-meta { font-size: 13px; margin: 0 0 24px; }
-.doc-intro { padding: 14px 16px; background: var(--brand-soft); border-radius: var(--radius); }
-.doc p { margin: 0 0 12px; }
-
 
 /* =======================================================================
  * БАННЕР НА ПЕРВЫЙ ЭКРАН
@@ -1466,6 +1258,15 @@ td.nowrap, th.nowrap { white-space: nowrap; }
   );
 }
 
+/*
+ * Три шага в ряд с 768px. Раньше это правило жило тегом <style> внутри
+ * компонента; во Vue шаблон таких тегов не допускает, поэтому оно здесь.
+ * !important — потому что колонка по умолчанию задана в разметке.
+ */
+@media (min-width: 768px) {
+  .steps-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
 /* =======================================================================
  * НИЖНИЙ БАННЕР
  *
@@ -1687,3 +1488,16 @@ td.nowrap, th.nowrap { white-space: nowrap; }
 
 /* Заголовок формы не должен налезать на крестик */
 .leadform h2 { padding-right: 44px; }
+
+/*
+ * Подвал в строку с 768px. Перенесено из тега <style> внутри компонента
+ * подвала — во Vue шаблон таких тегов не допускает. !important — потому
+ * что направление по умолчанию задано в разметке.
+ */
+@media (min-width: 768px) {
+  .footer-inner {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
