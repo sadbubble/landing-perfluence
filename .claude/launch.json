@@ -45,7 +45,7 @@
         "http.server",
         "4200",
         "--directory",
-        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/a0981d68-b0e5-4bd2-bec9-d43197146fc7/scratchpad/deploy-test"
+        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/a5421950-c079-494e-b502-ca42467e1956/scratchpad/deploy-test"
       ],
       "port": 4200
     }

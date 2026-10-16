@@ -27,11 +27,3 @@ export const BASE = detectBase();
 export function withBase(path: string): string {
   return BASE + path.replace(/^\//, "");
 }
-
-/** basename для маршрутизатора: тот же путь без завершающего слэша. */
-export const ROUTER_BASENAME = BASE.replace(/\/$/, "") || "/";
-
-/** Путь страницы без папки — для разбора /d/КОД. */
-export function pathWithinBase(pathname: string = window.location.pathname): string {
-  return pathname.startsWith(BASE) ? "/" + pathname.slice(BASE.length) : pathname;
-}
