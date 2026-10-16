@@ -18,5 +18,6 @@
 Как вернуть этот вариант (цветной логотип на белом экране): положить
 скрипт обратно в `scripts/`, поставить в нём `TV_LOGO = True`, запустить —
 он создаст `src/lib/heroLogo.ts` и `public/kt-logo-color.png`. Затем вернуть
-в `Hero.tsx` SVG-слой внутри `.hero-photo` (см. коммит 139210e) и стиль
+в баннер (сейчас `src/components/HeroBanner.vue`) SVG-слой внутри
+`.hero-photo` (см. коммит 139210e, тогда ещё React) и стиль
 `.hero-photo-logo`. В `scripts/hero-image.py` выключить `BRAND_SCREEN`.
