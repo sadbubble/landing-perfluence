@@ -22,22 +22,6 @@
       "port": 4200
     },
     {
-      "name": "preview-telecom",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": [
-        "vite",
-        "preview",
-        "--base",
-        "/perfluence/",
-        "--outDir",
-        "dist-telecom",
-        "--port",
-        "4200",
-        "--strictPort"
-      ],
-      "port": 4200
-    },
-    {
       "name": "static-4200",
       "runtimeExecutable": "python",
       "runtimeArgs": [
@@ -46,6 +30,18 @@
         "4200",
         "--directory",
         "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/a5421950-c079-494e-b502-ca42467e1956/scratchpad/deploy-test"
+      ],
+      "port": 4200
+    },
+    {
+      "name": "preview-dist",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "preview",
+        "--port",
+        "4200",
+        "--strictPort"
       ],
       "port": 4200
     }

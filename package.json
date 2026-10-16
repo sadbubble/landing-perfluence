@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build:telecom": "vue-tsc --noEmit && vite build --base ./ --outDir dist-telecom",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run"

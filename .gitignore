@@ -1,7 +1,5 @@
 node_modules
 dist
-# Сборка под https://telecom.kz/perfluence (npm run build:telecom)
-dist-telecom
 .env
 .env.local
 .env.*.local

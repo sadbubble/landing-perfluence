@@ -36,12 +36,9 @@ npm run dev
 npm run build
 ```
 
-```bash
-npm run build:telecom
-```
-
-Вторая — сборка для сайта Казахтелекома, папка `dist-telecom/` кладётся на
-сервер как есть, см. [`DEPLOY.md`](DEPLOY.md).
+Сборка в `dist/` с относительными путями: она же годится и для Vercel, и
+для сайта Казахтелекома. КТ получает исходники и собирает сам, см.
+[`DEPLOY.md`](DEPLOY.md).
 
 ```bash
 npm test
