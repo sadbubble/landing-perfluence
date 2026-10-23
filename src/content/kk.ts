@@ -32,6 +32,8 @@ export const content = {
   toggleNoContract: "Келісім­шартсыз",
   savingLabel: "үнемдеу",
   priceModeHint: "Келісімшарт айлық төлемді азайтады",
+  rentLabel: "+ жабдықты жалға алу",
+  rentNote: "Ескертпе: модемді жалға алу құны — айына 414,29 ₸-ден бастап.",
   detailsMore: "Толығырақ",
   detailsLess: "Жасыру",
 

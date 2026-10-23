@@ -182,6 +182,8 @@ function scrollToTariffs() {
         :toggle-no-contract="c.toggleNoContract"
         :saving-label="c.savingLabel"
         :price-mode-hint="c.priceModeHint"
+        :rent-label="c.rentLabel"
+        :rent-note="c.rentNote"
         :details-more="c.detailsMore"
         :details-less="c.detailsLess"
         @select="handleTariffSelect"

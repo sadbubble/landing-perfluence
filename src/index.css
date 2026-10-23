@@ -666,6 +666,14 @@ html {
   color: var(--ink-muted);
 }
 
+/* «+ аренда оборудования»: в цену не входит, стоимость — в .tariffs-note */
+.tcard-rent {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 .tcard-saving {
   margin-top: 10px;
   padding: 3px 10px;
@@ -996,6 +1004,16 @@ html {
 @media (min-width: 1024px) {
   .tariffs-grid > :last-child:nth-child(3n + 1) { grid-column: 2; }
 }
+/* Примечание под карточками: стоимость аренды модема */
+.tariffs-note {
+  max-width: 680px;
+  margin: 28px auto 0;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
 /* Обёртка для анимации не должна ломать выравнивание карточек по высоте */
 .tariffs-grid > .reveal { display: flex; }
 .tariffs-grid > .reveal > * { width: 100%; }

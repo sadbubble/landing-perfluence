@@ -23,6 +23,9 @@ const props = defineProps<{
   toggleNoContract: string;
   savingLabel: string;
   priceModeHint: string;
+  /** «+ аренда оборудования» под ценой и примечание с её стоимостью. */
+  rentLabel: string;
+  rentNote: string;
   detailsMore: string;
   detailsLess: string;
 }>();
@@ -71,11 +74,16 @@ const cards = computed(() => {
             :contract-mode-label="toggleContract"
             :no-contract-mode-label="toggleNoContract"
             :mode-hint="priceModeHint"
+            :rent-label="rentLabel"
             :connect-label="connectLabel"
             @select="emit('select', $event)"
           />
         </div>
       </div>
+
+      <!-- Аренда модема в цену тарифов не входит — под каждой ценой строка
+           «+ аренда оборудования», а здесь сколько она стоит. -->
+      <p class="tariffs-note">{{ rentNote }}</p>
     </div>
   </section>
 </template>

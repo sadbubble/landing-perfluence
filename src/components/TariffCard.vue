@@ -45,6 +45,8 @@ const props = defineProps<{
   noContractModeLabel: string;
   /** Подпись группы кнопок режима для экранных дикторов. */
   modeHint: string;
+  /** «+ аренда оборудования» — её нет в цене, стоимость в примечании секции. */
+  rentLabel: string;
 }>();
 
 const emit = defineEmits<{ select: [sel: TariffSelection] }>();
@@ -163,6 +165,7 @@ function select() {
       <span class="tcard-price-cur">{{ currency }}</span>
     </div>
     <div class="tcard-per">{{ perMonthShort }}</div>
+    <div class="tcard-rent">{{ rentLabel }}</div>
 
     <span v-if="saving > 0" class="tcard-saving">
       −{{ saving.toLocaleString("ru-RU") }} {{ currency }} {{ savingLabel }}
