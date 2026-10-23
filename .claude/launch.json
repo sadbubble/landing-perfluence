@@ -34,6 +34,16 @@
       "port": 4200
     },
     {
+      "name": "noslash-4200",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "scripts/serve-noslash.py",
+        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/d55bcf07-0f06-4044-9e4e-c699d0d90171/scratchpad/deploy-test",
+        "4200"
+      ],
+      "port": 4200
+    },
+    {
       "name": "preview-dist",
       "runtimeExecutable": "npx",
       "runtimeArgs": [

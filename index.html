@@ -9,10 +9,22 @@
       /*
        * Адрес папки без завершающего слэша (/perfluence вместо /perfluence/):
        * относительные пути к файлам отсчитались бы от корня сайта, и
-       * страница осталась бы без стилей и скриптов. Добавляем слэш.
+       * страница осталась бы без стилей и скриптов.
+       *
+       * Не переадресуем, а подставляем <base> с папкой: адрес не меняется,
+       * а ./assets/… ищутся в /perfluence/assets/…. Переадресация на «/»
+       * была опасна: telecom.kz сам убирает слэш (301 /perfluence/ →
+       * /perfluence), и страница перекидывалась бы по кругу бесконечно.
+       *
+       * Работает потому, что этот скрипт стоит в <head> раньше тегов сборки:
+       * они разбираются уже с новой базой. Ссылок-якорей (#…) на странице
+       * нет — с <base> они вели бы на другой адрес.
        */
-      if (!/\/$/.test(location.pathname) && !/\.[a-z0-9]+$/i.test(location.pathname))
-        location.replace(location.pathname + "/" + location.search + location.hash);
+      if (!/\/$/.test(location.pathname) && !/\.[a-z0-9]+$/i.test(location.pathname)) {
+        const base = document.createElement("base");
+        base.href = location.pathname + "/";
+        document.head.appendChild(base);
+      }
     </script>
   </head>
   <body>
