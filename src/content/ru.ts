@@ -221,6 +221,94 @@ export const content = {
       badge: "Всё включено",
       recommended: false,
     },
+    {
+      slug: "back-to-school",
+      group: null,
+      headline: "до 500 Мбит/с + ТВ + SIM + планшет",
+      tagline: "Для учёбы — планшет в тарифе",
+      name: "Back to School",
+      // Состав и цена — с карточки Back to School на сайте Казахтелекома
+      // (октябрь 2026), по слову заказчика. Только с контрактом на 3 года.
+      services: [
+        { icon: "internet", title: "Домашний интернет", summary: "до 500 Мбит/с", facts: [], details: [] },
+        { icon: "tv", title: "TV+ Teens", summary: "18 каналов · 2 онлайн-кинотеатра · до 3 устройств", facts: [], details: [] },
+        { icon: "mobile", title: "Мобильная связь", summary: "40 ГБ · 250 мин · 100 SMS · безлимит внутри сети", facts: [], details: [] },
+        { icon: "tablet", title: "Планшет", summary: "входит в тариф", facts: [], details: [] },
+        {
+          icon: "gift",
+          title: "Бонус Skillbox на выбор",
+          summary: "курс по AI или первые 3 модуля любого курса",
+          facts: [],
+          details: [
+            "Курс по AI от Skillbox: 7 модулей, 49 уроков (обычная цена 100 865 ₸)",
+            "Первые 3 модуля любого курса Skillbox — 0 ₸",
+          ],
+        },
+      ],
+      price: {
+        contract: "12 990",
+        noContract: null,
+        contractLabel: "Контракт на 3 года",
+        extra: [],
+      },
+      simVariants: null,
+      badge: null,
+      recommended: false,
+    },
+    {
+      slug: "go-smart",
+      group: null,
+      headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
+      tagline: "Интернет, связь и часы в подарок",
+      name: "Go Smart",
+      // С сайта Казахтелекома (октябрь 2026): один тариф у двух мобильных
+      // операторов — Go Smart A (Altel) и Go Smart (Activ). Условия и цена
+      // одинаковые, в Qbox это разные продукты, поэтому выбор — вариантами,
+      // как 2 SIM / 4 SIM у Bereket. Только с контрактом на 12 месяцев.
+      services: null,
+      price: {
+        contract: "7 990",
+        noContract: null,
+        contractLabel: "Контракт на 1 год",
+        extra: [],
+      },
+      simVariants: [
+        {
+          id: "altel",
+          label: "Altel",
+          headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
+          services: [
+            { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
+            { icon: "mobile", title: "Мобильная связь Altel", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
+            { icon: "watch", title: "Смарт-часы", summary: "в подарок", facts: [], details: [] },
+          ],
+          price: {
+            contract: "7 990",
+            noContract: null,
+            contractLabel: "Контракт на 1 год",
+            extra: [],
+          },
+        },
+        {
+          id: "activ",
+          label: "Activ",
+          headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
+          services: [
+            { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
+            { icon: "mobile", title: "Мобильная связь Activ", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
+            { icon: "watch", title: "Смарт-часы", summary: "в подарок", facts: [], details: [] },
+          ],
+          price: {
+            contract: "7 990",
+            noContract: null,
+            contractLabel: "Контракт на 1 год",
+            extra: [],
+          },
+        },
+      ],
+      badge: null,
+      recommended: false,
+    },
   ],
 
   connectLabel: "Подключить",
@@ -316,7 +404,9 @@ export type TariffSlug =
   | "internet-500"
   | "keremet-tv-promo"
   | "keremet-tv-2026"
-  | "bereket";
+  | "bereket"
+  | "back-to-school"
+  | "go-smart";
 
 /**
  * Цена тарифа.
@@ -339,15 +429,16 @@ export interface TariffPrice {
 }
 
 /**
- * Вариант тарифа по числу SIM-карт — сейчас только у Bereket.
+ * Вариант тарифа внутри одной карточки: у Bereket — по числу SIM-карт
+ * (2 / 4 SIM), у Go Smart — по мобильному оператору (Altel / Activ).
  *
- * Заведён не ради оформления: в Qbox девять продуктов, и четыре из них —
+ * Заведён не ради оформления: в Qbox это разные продукты, и четыре из них —
  * это Bereket на 2 и 4 SIM в двух режимах цены. Пока 4 SIM был строчкой
  * текста под ценой, лендинг физически не мог сообщить форме, что человек
  * выбрал именно его.
  */
 export interface SimVariant {
-  /** Совпадает с частью ключа в справочнике Qbox: «2sim» / «4sim». */
+  /** Совпадает с частью ключа в справочнике Qbox: «2sim», «4sim», «altel», «activ». */
   id: string;
   /** Подпись на переключателе: «2 SIM». */
   label: string;
@@ -369,7 +460,8 @@ export interface SimVariant {
  */
 export interface TariffService {
   /**
-   * Иконка: "internet", "tv" или "mobile" — рисунки в TariffCard.tsx.
+   * Иконка: "internet", "tv", "mobile", "tablet", "watch" или "gift" —
+   * рисунки в ServiceBlock.vue.
    * Строка, а не перечисление: объект текстов не типизирован, и TypeScript
    * расширяет значение до string. Неизвестное имя — блок без иконки.
    */

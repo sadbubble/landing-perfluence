@@ -24,7 +24,7 @@ const props = defineProps<{
   lessLabel: string;
 }>();
 
-const ICONS = ["internet", "tv", "mobile"];
+const ICONS = ["internet", "tv", "mobile", "tablet", "watch", "gift"];
 
 const open = ref(false);
 const bodyId = useId();
@@ -52,6 +52,20 @@ const summaryParts = computed(() => splitNumbers(props.service.summary));
         <template v-else-if="service.icon === 'tv'">
           <rect x="2.5" y="4.5" width="19" height="12.5" rx="2" />
           <path d="M8 20.5h8" />
+        </template>
+        <!-- Планшет: шире телефона, кнопка снизу точкой -->
+        <template v-else-if="service.icon === 'tablet'">
+          <rect x="4" y="2.5" width="16" height="19" rx="2.2" />
+          <path d="M12 18.5h.01" />
+        </template>
+        <template v-else-if="service.icon === 'watch'">
+          <rect x="6.5" y="6.5" width="11" height="11" rx="2.6" />
+          <path d="M9 6.5l.6-3.5h4.8l.6 3.5M9 17.5l.6 3.5h4.8l.6-3.5M12 9.8V12l1.5 1.2" />
+        </template>
+        <template v-else-if="service.icon === 'gift'">
+          <rect x="3.5" y="8" width="17" height="4" rx="1" />
+          <path d="M5 12v8.5h14V12M12 8v12.5" />
+          <path d="M12 8C10.5 4.5 7 4.5 7.3 6.8 7.6 8 12 8 12 8zm0 0c1.5-3.5 5-3.5 4.7-1.2C16.4 8 12 8 12 8z" />
         </template>
         <template v-else>
           <rect x="6.5" y="2.5" width="11" height="19" rx="2.2" />

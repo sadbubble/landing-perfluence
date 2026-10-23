@@ -87,7 +87,7 @@ export interface TariffSelection {
  *
  * Названия взяты из таблицы ТЗ п.4. Маркетинг по слайду 14 «Инструкции по
  * запуску лидогенерации» готовит свой финальный список — если он придёт и
- * будет отличаться, меняются ровно эти девять строк и больше ничего.
+ * будет отличаться, меняются ровно эти двенадцать строк и больше ничего.
  *
  * Ключ собирается как `slug|mode` или `slug|mode|sim` — см. productKey().
  */
@@ -104,6 +104,12 @@ export const QBOX_PRODUCTS: Record<string, string> = {
   "bereket|noContract|2sim":      "Bereket 2 SIM (без контракта)",
   "bereket|contract|4sim":        "Bereket 4 SIM (контракт 3 года)",
   "bereket|noContract|4sim":      "Bereket 4 SIM (без контракта)",
+  // Добавлены в октябре 2026 по скринам с сайта КТ, оба только с
+  // контрактом. Go Smart у Altel называется «Go Smart A» — названия как на
+  // сайте КТ, оператор в скобках, чтобы менеджер видел его сразу.
+  "back-to-school|contract":      "Back to School (контракт 3 года)",
+  "go-smart|contract|altel":      "Go Smart A (Altel, контракт 1 год)",
+  "go-smart|contract|activ":      "Go Smart (Activ, контракт 1 год)",
 };
 
 /** Собирает ключ справочника из выбора пользователя. */
