@@ -14,8 +14,7 @@ export const content = {
   heroSecondaryCtaLabel: "Тарифтерді көру",
   heroHighlights: [
     "1–2 күнде қосу",
-    "Қазақтелеком желісі",
-    "Жасырын төлемдерсіз",
+    "Жоғары жылдамдықты интернет",
   ],
   chooseTariffLabel: "Тарифті таңдау",
   heroScrollHint: "Тарифтерге өту",
@@ -252,6 +251,8 @@ export const content = {
     {
       slug: "go-smart",
       group: null,
+      // Altel / Activ — крупными кнопками, как «с контрактом / без».
+      variantsLook: "wide" as const,
       headline: "200 Мбит/с дейін +\u00a02\u00a0SIM + смарт-сағат",
       tagline: "Интернет, байланыс және сыйлыққа сағат",
       name: "Go Smart",

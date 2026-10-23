@@ -15,8 +15,7 @@ export const content = {
   heroSecondaryCtaLabel: "Смотреть тарифы",
   heroHighlights: [
     "Подключение за 1–2 дня",
-    "Сеть Казахтелекома",
-    "Без скрытых доплат",
+    "Высокоскоростной интернет",
   ],
   chooseTariffLabel: "Выбрать тариф",
   heroScrollHint: "Перейти к тарифам",
@@ -262,6 +261,8 @@ export const content = {
     {
       slug: "go-smart",
       group: null,
+      // Altel / Activ — крупными кнопками, как «с контрактом / без».
+      variantsLook: "wide" as const,
       headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
       tagline: "Интернет, связь и часы в подарок",
       name: "Go Smart",
@@ -514,6 +515,13 @@ export interface Tariff {
   price: TariffPrice;
   /** Варианты по числу SIM. null — у тарифа один вариант, переключателя нет. */
   simVariants: SimVariant[] | null;
+  /**
+   * Вид выбора вариантов. По умолчанию — маленький круглый переключатель
+   * (2 SIM / 4 SIM у Bereket). "wide" — крупные кнопки во всю ширину, как
+   * выбор «с контрактом / без контракта»: так у Go Smart выбор оператора
+   * Altel / Activ (решение заказчика, 23.10.2026).
+   */
+  variantsLook?: "wide";
   badge: string | null;
   recommended: boolean;
 }

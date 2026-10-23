@@ -69,6 +69,7 @@ const modeLabel = (m: PriceMode) =>
 const offer = computed(() => props.offers.find((t) => hasMode(t, mode.value)) ?? props.offers[0]);
 
 const simId = ref<string | null>(props.offers[0]?.simVariants?.[0]?.id ?? null);
+const wideVariants = computed(() => offer.value.variantsLook === "wide");
 
 // Цена и строка сути берутся из выбранного варианта SIM, если он есть.
 const variant = computed(() => {
@@ -126,9 +127,11 @@ function select() {
       </template>
     </p>
 
+    <!-- Вид выбора вариантов задаёт тариф: круглый переключатель (2/4 SIM)
+         или крупные кнопки как у режима (Altel / Activ у Go Smart). -->
     <div
       v-if="offer.simVariants && offer.simVariants.length > 1"
-      class="tcard-sim"
+      :class="wideVariants ? 'tcard-mode' : 'tcard-sim'"
       role="group"
       :aria-label="offer.name"
     >
@@ -136,7 +139,7 @@ function select() {
         v-for="v in offer.simVariants"
         :key="v.id"
         type="button"
-        :class="['tcard-sim-btn', { 'is-active': v.id === variant?.id }]"
+        :class="[wideVariants ? 'tcard-mode-btn' : 'tcard-sim-btn', { 'is-active': v.id === variant?.id }]"
         :aria-pressed="v.id === variant?.id"
         @click="simId = v.id"
       >
