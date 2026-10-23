@@ -75,16 +75,16 @@ describe("адрес формы", () => {
 });
 
 describe("названия тарифов для Qbox", () => {
-  it("двенадцать сочетаний, у каждого своё название", () => {
+  it("одиннадцать сочетаний, у каждого своё название", () => {
     const values = Object.values(QBOX_PRODUCTS);
-    expect(values).toHaveLength(12);
-    expect(new Set(values).size).toBe(12);
+    expect(values).toHaveLength(11);
+    expect(new Set(values).size).toBe(11);
   });
 
   it("неизвестное сочетание — заявка без тарифа, а не выдуманное название", () => {
     expect(resolveProduct({ slug: "internet-200", mode: "contract", sim: null })).toBeNull();
-    expect(resolveProduct({ slug: "go-smart", mode: "contract", sim: "activ" })).toBe(
-      "Go Smart (Activ, контракт 1 год)",
+    expect(resolveProduct({ slug: "go-smart", mode: "contract", sim: null })).toBe(
+      "Go Smart (Altel/Activ, контракт 1 год)",
     );
   });
 });

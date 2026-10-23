@@ -261,56 +261,35 @@ export const content = {
     {
       slug: "go-smart",
       group: null,
-      // Altel / Activ — крупными кнопками, как «с контрактом / без».
-      variantsLook: "wide" as const,
       headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
       tagline: "Интернет, связь и часы в подарок",
       name: "Go Smart",
       // С сайта Казахтелекома (октябрь 2026): один тариф у двух мобильных
-      // операторов — Go Smart A (Altel) и Go Smart (Activ). Условия и цена
-      // одинаковые, в Qbox это разные продукты, поэтому выбор — вариантами,
-      // как 2 SIM / 4 SIM у Bereket. Только с контрактом на 12 месяцев.
-      services: null,
+      // операторов — Go Smart A (Altel) и Go Smart (Activ), условия и цена
+      // одинаковые. Выбора оператора на карточке нет (решение заказчика,
+      // 23.10.2026): мобильная связь одним блоком «Altel/Activ», как у
+      // Bereket, оператор уточняет менеджер. Только с контрактом на 12 месяцев.
+      services: [
+        { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
+        {
+          icon: "mobile",
+          title: "Мобильная связь Altel/Activ",
+          summary: "2 SIM-карты:",
+          facts: [
+            { value: "60 ГБ", label: "интернет-трафик" },
+            { value: "250 мин", label: "на звонки" },
+          ],
+          details: [],
+        },
+        { icon: "watch", title: "Смарт-часы", summary: "в подарок", facts: [], details: [] },
+      ],
       price: {
         contract: "7 990",
         noContract: null,
         contractLabel: "Контракт на 1 год",
         extra: [],
       },
-      simVariants: [
-        {
-          id: "altel",
-          label: "Altel",
-          headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
-          services: [
-            { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
-            { icon: "mobile", title: "Мобильная связь Altel", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
-            { icon: "watch", title: "Смарт-часы", summary: "в подарок", facts: [], details: [] },
-          ],
-          price: {
-            contract: "7 990",
-            noContract: null,
-            contractLabel: "Контракт на 1 год",
-            extra: [],
-          },
-        },
-        {
-          id: "activ",
-          label: "Activ",
-          headline: "до 200 Мбит/с +\u00a02\u00a0SIM + смарт-часы",
-          services: [
-            { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
-            { icon: "mobile", title: "Мобильная связь Activ", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
-            { icon: "watch", title: "Смарт-часы", summary: "в подарок", facts: [], details: [] },
-          ],
-          price: {
-            contract: "7 990",
-            noContract: null,
-            contractLabel: "Контракт на 1 год",
-            extra: [],
-          },
-        },
-      ],
+      simVariants: null,
       badge: null,
       recommended: false,
     },
@@ -434,8 +413,7 @@ export interface TariffPrice {
 }
 
 /**
- * Вариант тарифа внутри одной карточки: у Bereket — по числу SIM-карт
- * (2 / 4 SIM), у Go Smart — по мобильному оператору (Altel / Activ).
+ * Вариант тарифа по числу SIM-карт — сейчас только у Bereket.
  *
  * Заведён не ради оформления: в Qbox это разные продукты, и четыре из них —
  * это Bereket на 2 и 4 SIM в двух режимах цены. Пока 4 SIM был строчкой
@@ -443,7 +421,7 @@ export interface TariffPrice {
  * выбрал именно его.
  */
 export interface SimVariant {
-  /** Совпадает с частью ключа в справочнике Qbox: «2sim», «4sim», «altel», «activ». */
+  /** Совпадает с частью ключа в справочнике Qbox: «2sim» / «4sim». */
   id: string;
   /** Подпись на переключателе: «2 SIM». */
   label: string;
@@ -515,13 +493,6 @@ export interface Tariff {
   price: TariffPrice;
   /** Варианты по числу SIM. null — у тарифа один вариант, переключателя нет. */
   simVariants: SimVariant[] | null;
-  /**
-   * Вид выбора вариантов. По умолчанию — маленький круглый переключатель
-   * (2 SIM / 4 SIM у Bereket). "wide" — крупные кнопки во всю ширину, как
-   * выбор «с контрактом / без контракта»: так у Go Smart выбор оператора
-   * Altel / Activ (решение заказчика, 23.10.2026).
-   */
-  variantsLook?: "wide";
   badge: string | null;
   recommended: boolean;
 }

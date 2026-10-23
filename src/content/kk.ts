@@ -251,52 +251,30 @@ export const content = {
     {
       slug: "go-smart",
       group: null,
-      // Altel / Activ — крупными кнопками, как «с контрактом / без».
-      variantsLook: "wide" as const,
       headline: "200 Мбит/с дейін +\u00a02\u00a0SIM + смарт-сағат",
       tagline: "Интернет, байланыс және сыйлыққа сағат",
       name: "Go Smart",
-      services: null,
+      services: [
+        { icon: "internet", title: "Үй интернеті", summary: "200 Мбит/с дейін", facts: [], details: [] },
+        {
+          icon: "mobile",
+          title: "Altel/Activ ұялы байланысы",
+          summary: "2 SIM-карта:",
+          facts: [
+            { value: "60 ГБ", label: "интернет-трафик" },
+            { value: "250 мин", label: "қоңырауларға" },
+          ],
+          details: [],
+        },
+        { icon: "watch", title: "Смарт-сағат", summary: "сыйлыққа", facts: [], details: [] },
+      ],
       price: {
         contract: "7 990",
         noContract: null,
         contractLabel: "1 жылға келісімшарт",
         extra: [],
       },
-      simVariants: [
-        {
-          id: "altel",
-          label: "Altel",
-          headline: "200 Мбит/с дейін +\u00a02\u00a0SIM + смарт-сағат",
-          services: [
-            { icon: "internet", title: "Үй интернеті", summary: "200 Мбит/с дейін", facts: [], details: [] },
-            { icon: "mobile", title: "Altel ұялы байланысы", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
-            { icon: "watch", title: "Смарт-сағат", summary: "сыйлыққа", facts: [], details: [] },
-          ],
-          price: {
-            contract: "7 990",
-            noContract: null,
-            contractLabel: "1 жылға келісімшарт",
-            extra: [],
-          },
-        },
-        {
-          id: "activ",
-          label: "Activ",
-          headline: "200 Мбит/с дейін +\u00a02\u00a0SIM + смарт-сағат",
-          services: [
-            { icon: "internet", title: "Үй интернеті", summary: "200 Мбит/с дейін", facts: [], details: [] },
-            { icon: "mobile", title: "Activ ұялы байланысы", summary: "2 SIM · 60 ГБ · 250 мин", facts: [], details: [] },
-            { icon: "watch", title: "Смарт-сағат", summary: "сыйлыққа", facts: [], details: [] },
-          ],
-          price: {
-            contract: "7 990",
-            noContract: null,
-            contractLabel: "1 жылға келісімшарт",
-            extra: [],
-          },
-        },
-      ],
+      simVariants: null,
       badge: null,
       recommended: false,
     },
