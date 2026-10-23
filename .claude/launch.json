@@ -29,7 +29,7 @@
         "http.server",
         "4200",
         "--directory",
-        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/d55bcf07-0f06-4044-9e4e-c699d0d90171/scratchpad/deploy-test"
+        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/0f890874-e824-471a-b53d-6c1b559178eb/scratchpad/deploy-test"
       ],
       "port": 4200
     },
@@ -38,7 +38,7 @@
       "runtimeExecutable": "python",
       "runtimeArgs": [
         "scripts/serve-noslash.py",
-        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/d55bcf07-0f06-4044-9e4e-c699d0d90171/scratchpad/deploy-test",
+        "C:/Users/esils/AppData/Local/Temp/claude/C--work-landing-perfluence/0f890874-e824-471a-b53d-6c1b559178eb/scratchpad/deploy-test",
         "4200"
       ],
       "port": 4200
