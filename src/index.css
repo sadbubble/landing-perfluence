@@ -541,8 +541,8 @@ html {
  * это разные продукты с разными ценами, а до сих пор 4 SIM жил строчкой
  * текста под ценой: нажать на неё было нельзя, и выбор до формы не доезжал.
  *
- * Оформлен тише секционного переключателя цен — он подчинённый и не должен
- * спорить с ценой за внимание. Но высота всё равно 44px: правило для целей
+ * Оформлен тише выбора режима цены — он подчинённый и не должен спорить
+ * с ценой за внимание. Но высота всё равно 44px: правило для целей
  * под палец в этом проекте общее и поблажек для мелких элементов не имеет.
  */
 .tcard-sim {
@@ -576,6 +576,68 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   .tcard-sim-btn { transition: none; }
+}
+
+/*
+ * Выбор «с контрактом / без контракта» в карточке.
+ *
+ * Стоит прямо над ценой, которую меняет. Во всю ширину карточки и с
+ * прямоугольными углами — чтобы у Bereket не путался с переключателем
+ * 2 SIM / 4 SIM (тот круглый и по ширине содержимого).
+ *
+ * Казахские «Келісімшартпен / Келісімшартсыз» шире русских: при 320px
+ * карточка узкая, поэтому отступы маленькие и подпись может перенестись
+ * внутри кнопки — высота кнопки от этого растёт, но прокрутки нет.
+ *
+ * У тарифа с одним режимом (Интернет 200) — надпись той же высоты вместо
+ * кнопок: нажимать нечего, а цены в ряду остаются на одной линии.
+ */
+.tcard-mode {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 16px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.tcard-mode-btn {
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.tcard-mode-btn:not(.is-active):hover { background: var(--brand-soft); }
+.tcard-mode-btn.is-active {
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  cursor: default;
+}
+/* Надпись — та же коробка с одной ячейкой 44px: высота совпадает сама */
+.tcard-mode.is-single { grid-template-columns: 1fr; }
+.tcard-mode.is-single > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tcard-mode-btn { transition: none; }
 }
 
 .tcard-price {
@@ -903,90 +965,40 @@ html {
 
 .tariffs-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding-top: 12px; }
 @media (min-width: 600px)  { .tariffs-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1024px) { .tariffs-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /*
- * Три карточки вместо четырёх — на вкладке «С контрактом» нет Интернета 200.
+ * Шесть карточек — три сверху, три снизу (решение заказчика, октябрь 2026).
  *
- * На десктопе три колонки и сетка уже на ширину одной карточки: иначе они
- * встали бы влево, а справа зияла бы пустая четвёртая колонка. Ширина
- * карточки при этом та же, что в ряду из четырёх, — переключение вкладок
- * не меняет их размер.
- *
- * В две колонки третья карточка остаётся одна в ряду — ставим её по центру.
+ * Ширина сетки ограничена: во всю ширину секции (1200px) карточка выходила
+ * под 390px, и короткие строки состава терялись в пустом поле. Ряды
+ * независимы: высота общая внутри ряда, нижний с Bereket выше верхнего.
  */
 @media (min-width: 1024px) {
-  .tariffs-grid.is-3 {
+  .tariffs-grid {
     grid-template-columns: repeat(3, 1fr);
-    max-width: calc((100% - 60px) / 4 * 3 + 40px);
+    max-width: 1080px;
     margin-inline: auto;
   }
 }
+
+/*
+ * Страховка на случай, если карточек станет не кратно колонкам (пока новые
+ * тарифы не добавлены, их четыре): одинокая карточка в последнем ряду —
+ * по центру, а не прижатой влево.
+ */
 @media (min-width: 600px) and (max-width: 1023px) {
-  .tariffs-grid.is-3 > :last-child {
+  .tariffs-grid > :last-child:nth-child(odd) {
     grid-column: 1 / -1;
     justify-self: center;
     width: calc(50% - 10px);
   }
 }
+@media (min-width: 1024px) {
+  .tariffs-grid > :last-child:nth-child(3n + 1) { grid-column: 2; }
+}
 /* Обёртка для анимации не должна ломать выравнивание карточек по высоте */
 .tariffs-grid > .reveal { display: flex; }
 .tariffs-grid > .reveal > * { width: 100%; }
-
-/* --- Переключатель цены -------------------------------------------------- */
-
-.price-toggle {
-  display: inline-flex;
-  gap: 4px;
-  margin: 26px auto 8px;
-  padding: 4px;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm);
-}
-.price-toggle-btn {
-  min-height: 44px;
-  padding: 10px 22px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink-muted);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease;
-}
-.price-toggle-btn.is-active {
-  background: var(--brand-strong);
-  color: var(--on-brand);
-  cursor: default;
-}
-.price-toggle-hint { margin: 0; font-size: 13px; color: var(--ink-muted); }
-
-/*
- * Переключатель цен на узких экранах.
- *
- * При 320px он занимал 326px при доступных 280 — страница получала
- * горизонтальную прокрутку. Казахские подписи «Келісімшартпен» и
- * «Келісімшартсыз» шире русских «С контрактом» и «Без контракта», поэтому
- * в русской версии всё было в порядке и дефект долго не замечали.
- *
- * Два средства сразу. Уменьшенные отступы и кегль возвращают блок в строку.
- * Разрешённый перенос — страховка: если перевод когда-нибудь окажется ещё
- * длиннее, кнопки встанут в два ряда, а прокрутка не появится.
- */
-@media (max-width: 420px) {
-  .price-toggle {
-    max-width: 100%;
-    flex-wrap: wrap;
-  }
-  .price-toggle-btn {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-}
 
 /* --- Цена в карточке ----------------------------------------------------- */
 

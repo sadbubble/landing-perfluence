@@ -1,0 +1,88 @@
+/* Из src/index.css: переключатель режима цены на всю секцию тарифов
+   и сетка под вкладки из 3 и 4 карточек. Убраны в октябре 2026, когда
+   выбор переехал в карточки. Разметка — TariffsSection.vue рядом. */
+
+.tariffs-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding-top: 12px; }
+@media (min-width: 600px)  { .tariffs-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .tariffs-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/*
+ * Три карточки вместо четырёх — на вкладке «С контрактом» нет Интернета 200.
+ *
+ * На десктопе три колонки и сетка уже на ширину одной карточки: иначе они
+ * встали бы влево, а справа зияла бы пустая четвёртая колонка. Ширина
+ * карточки при этом та же, что в ряду из четырёх, — переключение вкладок
+ * не меняет их размер.
+ *
+ * В две колонки третья карточка остаётся одна в ряду — ставим её по центру.
+ */
+@media (min-width: 1024px) {
+  .tariffs-grid.is-3 {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: calc((100% - 60px) / 4 * 3 + 40px);
+    margin-inline: auto;
+  }
+}
+@media (min-width: 600px) and (max-width: 1023px) {
+  .tariffs-grid.is-3 > :last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 10px);
+  }
+}
+
+/* --- Переключатель цены -------------------------------------------------- */
+
+.price-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin: 26px auto 8px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.price-toggle-btn {
+  min-height: 44px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.price-toggle-btn.is-active {
+  background: var(--brand-strong);
+  color: var(--on-brand);
+  cursor: default;
+}
+.price-toggle-hint { margin: 0; font-size: 13px; color: var(--ink-muted); }
+
+/*
+ * Переключатель цен на узких экранах.
+ *
+ * При 320px он занимал 326px при доступных 280 — страница получала
+ * горизонтальную прокрутку. Казахские подписи «Келісімшартпен» и
+ * «Келісімшартсыз» шире русских «С контрактом» и «Без контракта», поэтому
+ * в русской версии всё было в порядке и дефект долго не замечали.
+ *
+ * Два средства сразу. Уменьшенные отступы и кегль возвращают блок в строку.
+ * Разрешённый перенос — страховка: если перевод когда-нибудь окажется ещё
+ * длиннее, кнопки встанут в два ряда, а прокрутка не появится.
+ */
+@media (max-width: 420px) {
+  .price-toggle {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  .price-toggle-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+

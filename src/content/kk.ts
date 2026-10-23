@@ -26,8 +26,10 @@ export const content = {
   perMonth: "₸/ай",
   currency: "₸",
   perMonthShort: "/ай",
-  toggleContract: "Келісімшартпен",
-  toggleNoContract: "Келісімшартсыз",
+  // Мягкий перенос (­): на телефоне кнопка в карточке уже слова, и без
+  // него карточка распиралась шире экрана. Переносится, только если не влезает.
+  toggleContract: "Келісім­шартпен",
+  toggleNoContract: "Келісім­шартсыз",
   savingLabel: "үнемдеу",
   priceModeHint: "Келісімшарт айлық төлемді азайтады",
   detailsMore: "Толығырақ",
@@ -36,6 +38,7 @@ export const content = {
   tariffs: [
     {
       slug: "internet-200",
+      group: null,
       headline: "200 Мбит/с дейін",
       tagline: "Үй мен оқуға",
       name: "Интернет 200",
@@ -54,6 +57,7 @@ export const content = {
     },
     {
       slug: "internet-500",
+      group: null,
       headline: "500 Мбит/с дейін",
       tagline: "Жылдамдық қажет болғандарға",
       name: "Интернет 500",
@@ -72,6 +76,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-promo",
+      group: "keremet",
       headline: "200 Мбит/с дейін + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV PROMO",
@@ -91,6 +96,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
+      group: "keremet",
       headline: "300 Мбит/с дейін + ТВ",
       tagline: "Кино мен ТВ сүйетіндерге",
       name: "Keremet TV 2026",
@@ -110,6 +116,7 @@ export const content = {
     },
     {
       slug: "bereket",
+      group: null,
       headline: "интернет + ТВ + ұялы байланыс",
       tagline: "Отбасыға — бәрі бір жерде",
       name: "Bereket",

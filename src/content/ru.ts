@@ -37,13 +37,14 @@ export const content = {
   tariffs: [
     {
       slug: "internet-200",
+      group: null,
       headline: "до 200 Мбит/с",
       tagline: "Для дома и учёбы",
       name: "Интернет 200",
       services: [
         { icon: "internet", title: "Домашний интернет", summary: "до 200 Мбит/с", facts: [], details: [] },
       ],
-      // Только без контракта: на вкладке «С контрактом» карточки нет.
+      // Только без контракта: вместо выбора режима в карточке надпись.
       price: {
         contract: null,
         noContract: "7 999",
@@ -56,6 +57,7 @@ export const content = {
     },
     {
       slug: "internet-500",
+      group: null,
       headline: "до 500 Мбит/с",
       tagline: "Для тех, кому нужна скорость",
       name: "Интернет 500",
@@ -74,6 +76,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-promo",
+      group: "keremet",
       headline: "до 200 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV PROMO",
@@ -81,7 +84,8 @@ export const content = {
         { icon: "internet", title: "Домашний интернет", summary: "200 Мбит/с", facts: [], details: [] },
         { icon: "tv", title: "Телевидение", summary: "160+ каналов · 7 онлайн-кинотеатров", facts: [], details: [] },
       ],
-      // Только с контрактом на год. Без контракта на её месте Keremet TV 2026.
+      // Только с контрактом на год. Делит карточку с Keremet TV 2026 (group):
+      // «С контрактом» в ней — PROMO, «Без контракта» — TV 2026.
       price: {
         contract: "5 699",
         noContract: null,
@@ -94,6 +98,7 @@ export const content = {
     },
     {
       slug: "keremet-tv-2026",
+      group: "keremet",
       headline: "до 300 Мбит/с + ТВ",
       tagline: "Для любителей кино и ТВ",
       name: "Keremet TV 2026",
@@ -115,6 +120,7 @@ export const content = {
     },
     {
       slug: "bereket",
+      group: null,
       headline: "интернет + ТВ + моб. связь",
       tagline: "Для семьи — всё в одном",
       name: "Bereket",
@@ -321,9 +327,9 @@ export type TariffSlug =
 export interface TariffPrice {
   /**
    * Цена в каждом режиме необязательна. null значит «в этом режиме тарифа
-   * нет» — карточка на соответствующей вкладке не показывается вовсе.
-   * Так устроены Интернет 200 (только без контракта) и два Keremet: PROMO
-   * только с контрактом на год, TV 2026 только без контракта.
+   * нет». Так устроены Интернет 200 (только без контракта) и два Keremet:
+   * PROMO только с контрактом на год, TV 2026 только без контракта. Как это
+   * выглядит в карточке — см. Tariff.group и TariffCard.
    */
   contract: string | null;
   noContract: string | null;
@@ -389,6 +395,15 @@ export interface TariffService {
 
 export interface Tariff {
   slug: string;
+  /**
+   * Общая карточка для тарифов, которые различаются только режимом цены.
+   * Тарифы с одинаковым group показываются одной карточкой, и выбор «с
+   * контрактом / без контракта» в ней переключает сам тариф: так Keremet TV
+   * PROMO (только с контрактом) и Keremet TV 2026 (только без) стали одной
+   * карточкой «Keremet». В Qbox при этом уходит slug выбранного тарифа —
+   * названия продуктов не меняются. null — карточка своя.
+   */
+  group: string | null;
   name: string;
   /** Короткая подпись под названием: «Для семьи — всё в одном». */
   tagline: string;

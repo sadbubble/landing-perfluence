@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import type { Tariff } from "../content/ru";
-import type { PriceMode, TariffSelection } from "../lib/qbox";
+import type { TariffSelection } from "../lib/qbox";
 import TariffCard from "./TariffCard.vue";
 
 /**
- * Секция тарифов с переключателем «с контрактом / без контракта».
+ * Секция тарифов.
  *
- * Переключатель не украшение: у трёх из четырёх тарифов две разные цены,
- * и раньше обе лежали мелким текстом под карточкой — человек должен был
- * сам сравнивать. Теперь крупная цена меняется, а рядом появляется
- * посчитанная выгода, то есть выбор виден, а не вычисляется.
+ * Выбор «с контрактом / без контракта» живёт в каждой карточке, а не на
+ * всю секцию (решение заказчика, октябрь 2026): человек сравнивает режимы
+ * у того тарифа, который ему интересен, и набор карточек больше не меняется
+ * от вкладки к вкладке. Раньше на «С контрактом» было три карточки, на
+ * «Без контракта» — четыре, и часть тарифов просто исчезала.
  */
 const props = defineProps<{
   title: string;
@@ -28,33 +29,21 @@ const props = defineProps<{
 
 const emit = defineEmits<{ select: [sel: TariffSelection] }>();
 
-// По умолчанию показываем цену с контрактом: она ниже, и именно её
-// человек видит в рекламе у блогера.
-const mode = ref<PriceMode>("contract");
-
 /*
- * Переключали ли уже вкладку. Нужно ради анимации появления: useReveal
- * собирает элементы .reveal один раз при загрузке, и карточка, появившаяся
- * после переключения (Интернет 200, Keremet TV 2026), так и осталась бы с
- * прозрачностью 0. Раз человек нажал переключатель, секцию он уже видит —
- * новые карточки показываем сразу.
+ * Карточки: тарифы с одинаковым group собираются в одну (Keremet TV PROMO +
+ * Keremet TV 2026), остальные идут по одному. Порядок — по первому тарифу
+ * группы в данных.
  */
-const switched = ref(false);
-function choose(m: PriceMode) {
-  mode.value = m;
-  switched.value = true;
-}
-
-/*
- * На каждой вкладке свой набор: тариф показывается, только если у него
- * есть цена в этом режиме. У Bereket цены лежат в вариантах SIM.
- */
-const visible = computed(() =>
-  props.tariffs.filter((t) => {
-    const prices = t.simVariants ? t.simVariants.map((v) => v.price) : [t.price];
-    return prices.some((p) => (mode.value === "contract" ? p.contract : p.noContract) !== null);
-  }),
-);
+const cards = computed(() => {
+  const groups = new Map<string, Tariff[]>();
+  for (const t of props.tariffs) {
+    const key = t.group ?? t.slug;
+    const list = groups.get(key);
+    if (list) list.push(t);
+    else groups.set(key, [t]);
+  }
+  return Array.from(groups, ([key, offers]) => ({ key, offers }));
+});
 </script>
 
 <template>
@@ -62,43 +51,26 @@ const visible = computed(() =>
     <div class="tariffs-inner">
       <div class="tariffs-head reveal">
         <h2>{{ title }}</h2>
-
-        <div class="price-toggle" role="group" :aria-label="priceModeHint">
-          <button
-            :class="['price-toggle-btn', { 'is-active': mode === 'contract' }]"
-            :aria-pressed="mode === 'contract'"
-            @click="choose('contract')"
-          >
-            {{ toggleContract }}
-          </button>
-          <button
-            :class="['price-toggle-btn', { 'is-active': mode === 'noContract' }]"
-            :aria-pressed="mode === 'noContract'"
-            @click="choose('noContract')"
-          >
-            {{ toggleNoContract }}
-          </button>
-        </div>
-        <p class="price-toggle-hint">{{ priceModeHint }}</p>
+        <p>{{ priceModeHint }}</p>
       </div>
 
-      <!-- Число карточек в классе: сетка подстраивает колонки под 3 или 4 -->
-      <div :class="`tariffs-grid is-${visible.length}`">
+      <div class="tariffs-grid">
         <div
-          v-for="(tariff, i) in visible"
-          :key="tariff.slug"
-          :class="['reveal', { 'is-visible': switched }]"
-          :style="{ transitionDelay: switched ? '0ms' : `${i * 70}ms` }"
+          v-for="(card, i) in cards"
+          :key="card.key"
+          class="reveal"
+          :style="{ transitionDelay: `${i * 70}ms` }"
         >
           <TariffCard
-            v-bind="tariff"
-            :mode="mode"
+            :offers="card.offers"
             :currency="currency"
             :per-month-short="perMonthShort"
             :saving-label="savingLabel"
             :details-more="detailsMore"
             :details-less="detailsLess"
-            :no-contract-label="toggleNoContract"
+            :contract-mode-label="toggleContract"
+            :no-contract-mode-label="toggleNoContract"
+            :mode-hint="priceModeHint"
             :connect-label="connectLabel"
             @select="emit('select', $event)"
           />
