@@ -109,7 +109,13 @@ const saving = computed(() => {
 });
 
 function select() {
-  emit("select", { slug: offer.value.slug, mode: mode.value, sim: variant.value?.id ?? null });
+  emit("select", {
+    slug: offer.value.slug,
+    mode: mode.value,
+    sim: variant.value?.id ?? null,
+    // Для шапки окна с формой: тариф, который человек видит на карточке
+    title: variant.value ? `${offer.value.name} ${variant.value.label}` : offer.value.name,
+  });
 }
 </script>
 

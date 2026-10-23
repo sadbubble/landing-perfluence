@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
+import { onBeforeUnmount, ref, useId, watch } from "vue";
 
 /**
  * Модальное окно для формы заявки.
@@ -20,8 +20,12 @@ import { onBeforeUnmount, ref, watch } from "vue";
  */
 const props = defineProps<{
   open: boolean;
+  /** Заголовок в шапке окна: выбранный тариф или «Оставить заявку». */
+  title: string;
   closeLabel: string;
 }>();
+
+const titleId = useId();
 
 const emit = defineEmits<{ close: [] }>();
 
@@ -102,12 +106,25 @@ onBeforeUnmount(() => {
 <template>
   <div v-if="open" class="modal-backdrop" @mousedown="emit('close')">
     <!-- Клик внутри не должен закрывать окно, а всплывает он до фона -->
-    <div ref="panel" class="modal-panel" role="dialog" aria-modal="true" @mousedown.stop>
-      <button type="button" class="modal-close" :aria-label="closeLabel" @click="emit('close')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
+    <div
+      ref="panel"
+      class="modal-panel"
+      role="dialog"
+      aria-modal="true"
+      :aria-labelledby="titleId"
+      @mousedown.stop
+    >
+      <!-- Шапка как в окнах заявки на сайте КТ: название слева, крестик
+           справа, под ними тонкая линия. Крестик идёт первым элементом с
+           фокусом — activate() ставит фокус на следующий, то есть на форму. -->
+      <div class="modal-head">
+        <h2 :id="titleId" class="modal-title">{{ title }}</h2>
+        <button type="button" class="modal-close" :aria-label="closeLabel" @click="emit('close')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
 
       <slot />
     </div>

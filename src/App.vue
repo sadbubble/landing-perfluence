@@ -42,7 +42,7 @@ const attribution = captureAttribution();
  * embed — для рамки, direct — та же форма с теми же менеджером, тарифом и
  * языком для запасной ссылки «Откройте её отдельно» под рамкой.
  */
-const form = ref<{ embed: string; direct: string } | null>(null);
+const form = ref<{ embed: string; direct: string; title: string } | null>(null);
 
 /**
  * Открыть форму Qbox.
@@ -58,13 +58,14 @@ const form = ref<{ embed: string; direct: string } | null>(null);
  * Поэтому там, где встраивание запрещено, кнопка честно уводит на форму
  * переходом: заявка доедет одинаково, разница только в удобстве.
  */
-function goToForm(product: string | null) {
+function goToForm(product: string | null, title: string) {
   const manager = attribution.dealerCode;
 
   if (canEmbedForm()) {
     form.value = {
       embed: buildEmbedUrl(product, manager, lang.value),
       direct: buildFormUrl(product, manager, lang.value),
+      title,
     };
     return;
   }
@@ -101,14 +102,17 @@ function goToForm(product: string | null) {
   window.location.href = url;
 }
 
-/** Кнопка нижнего баннера: форма без тарифа. */
+/** Кнопка нижнего баннера: форма без тарифа, в шапке окна «Оставить заявку». */
 function openForm() {
-  goToForm(null);
+  goToForm(null, c.value.formTitle);
 }
 
-/** Кнопка на карточке: тариф, режим цены и число SIM уже известны. */
+/**
+ * Кнопка на карточке: тариф, режим цены и число SIM уже известны. В шапке
+ * окна — название выбранного тарифа, как на сайте Казахтелекома.
+ */
 function handleTariffSelect(sel: TariffSelection) {
-  goToForm(resolveProduct(sel));
+  goToForm(resolveProduct(sel), sel.title ?? c.value.formTitle);
 }
 
 /**
@@ -200,8 +204,14 @@ function scrollToTariffs() {
       />
     </main>
 
-    <ModalDialog :open="form !== null" :close-label="c.closeLabel" @close="form = null">
-      <h2 class="qbox-title">{{ c.formTitle }}</h2>
+    <!-- В шапке окна — выбранный тариф (или «Оставить заявку» с нижнего
+         баннера): так же, как в окнах заявки на сайте Казахтелекома. -->
+    <ModalDialog
+      :open="form !== null"
+      :title="form?.title ?? c.formTitle"
+      :close-label="c.closeLabel"
+      @close="form = null"
+    >
       <!--
         Форма Qbox чужая и живёт на их домене, поэтому здесь рамка, а не
         наша разметка. Из этого следуют два ограничения, которые починить
@@ -216,7 +226,7 @@ function scrollToTariffs() {
         проверить, не ломает ли он отрисовку формы, мы не можем: содержимое
         чужой рамки нам не видно. Домен доверенный — свой же у заказчика.
       -->
-      <iframe v-if="form" class="qbox-frame" :src="form.embed" :title="c.formTitle" />
+      <iframe v-if="form" class="qbox-frame" :src="form.embed" :title="form.title" />
       <!--
         Запасной выход, если рамка не загрузилась. Встраивание может
         запретить не только Qbox, но и сам сайт, на котором лежит лендинг

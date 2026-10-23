@@ -1,0 +1,106 @@
+/* Из src/index.css: окно заявки до 23.10.2026 — панель 560px с
+   отступами, заголовок «Оставить заявку» над рамкой, крестик в углу,
+   рамка clamp(420px, 68svh, 620px). Заменено окном по образцу КТ. */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background: rgba(10, 37, 64, 0.55);
+  animation: modal-fade 0.16s ease-out;
+}
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: auto;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(10,37,64,0.28);
+  animation: modal-rise 0.2s ease-out;
+}
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-panel { animation: none; }
+}
+
+/*
+ * Форма Qbox, встроенная рамкой.
+ *
+ * Высота задана нами, а не Qbox: в их коде стоит height="600", но на
+ * телефоне 600px не помещаются в экран, и низ формы с кнопкой «Отправить»
+ * уезжает за край. clamp привязывает высоту к окну и держит её в разумных
+ * границах на любом устройстве. Внутри форма прокручивается сама.
+ *
+ * Заголовок наш: в самой форме его нет, а окно без единой надписи над
+ * полями выглядит так, будто открылось по ошибке.
+ */
+.qbox-title {
+  margin: 0 0 16px;
+  padding-right: 44px; /* место под крестик */
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.qbox-frame {
+  display: block;
+  width: 100%;
+  height: clamp(420px, 68svh, 620px);
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* Запасная ссылка под рамкой — см. Landing.tsx. Цель под палец 44px. */
+.qbox-fallback {
+  margin: 6px 0 -10px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ink-muted);
+}
+.qbox-fallback a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--brand-strong);
+  font-weight: 700;
+}
+
+/*
+ * Крестик 44×44, а не 40: это норма для целей под палец в проекте, и здесь
+ * она особенно важна. С тех пор как в окне лежит чужая рамка, Esc его не
+ * закрывает — события клавиатуры остаются внутри формы Qbox и до нас не
+ * доходят. Крестик и клик по затемнению остались единственными способами
+ * выйти, и промахиваться по ним человек не должен.
+ */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.modal-close:hover { background: var(--bg); color: var(--ink); }
+

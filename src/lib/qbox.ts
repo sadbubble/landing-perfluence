@@ -65,6 +65,11 @@ export interface TariffSelection {
   mode: PriceMode;
   /** Только у тарифов с вариантами по SIM. Иначе null. */
   sim: string | null;
+  /**
+   * Название для шапки окна с формой на языке страницы: «Bereket 4 SIM».
+   * В Qbox не уходит — туда идёт название из QBOX_PRODUCTS по ключу.
+   */
+  title?: string;
 }
 
 /**

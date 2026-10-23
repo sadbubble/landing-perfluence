@@ -1414,6 +1414,12 @@ html {
  * МОДАЛЬНОЕ ОКНО С ФОРМОЙ
  * ======================================================================= */
 
+/*
+ * Окно заявки по образцу окон на сайте Казахтелекома (telecom.kz/
+ * telecom-internet, страница Back to School): компактная белая панель,
+ * в шапке — выбранный тариф и крестик, под ними тонкая линия, ниже форма
+ * Qbox без отступов вокруг. Фон страницы затемнён и размыт.
+ */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1423,7 +1429,9 @@ html {
   justify-content: center;
   padding: 24px 16px;
   overflow-y: auto;
-  background: rgba(10, 37, 64, 0.55);
+  background: rgba(10, 37, 64, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   animation: modal-fade 0.16s ease-out;
 }
 @keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -1431,10 +1439,10 @@ html {
 .modal-panel {
   position: relative;
   width: 100%;
-  max-width: 560px;
+  max-width: 440px;
   margin: auto;
-  padding: clamp(24px, 4vw, 36px);
-  border-radius: 20px;
+  overflow: hidden;
+  border-radius: 24px;
   background: var(--surface);
   box-shadow: 0 24px 60px rgba(10,37,64,0.28);
   animation: modal-rise 0.2s ease-out;
@@ -1447,39 +1455,74 @@ html {
   .modal-backdrop, .modal-panel { animation: none; }
 }
 
+.modal-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 20px;
+  border-bottom: 1px solid var(--line);
+}
+/* Название тарифа: «Bereket 4 SIM», «Keremet TV PROMO» — длинное
+   переносится, а не наезжает на крестик */
+.modal-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--brand-strong);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * Крестик 44×44, хотя значок маленький: это норма для целей под палец в
+ * проекте, и здесь она особенно важна. Esc окно не закрывает, пока фокус в
+ * форме Qbox, — события клавиатуры остаются в чужой рамке. Крестик и клик
+ * по затемнению — единственные способы выйти.
+ */
+.modal-close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.modal-close:hover { background: var(--bg); color: var(--ink); }
+
 /*
  * Форма Qbox, встроенная рамкой.
  *
- * Высота задана нами, а не Qbox: в их коде стоит height="600", но на
- * телефоне 600px не помещаются в экран, и низ формы с кнопкой «Отправить»
- * уезжает за край. clamp привязывает высоту к окну и держит её в разумных
- * границах на любом устройстве. Внутри форма прокручивается сама.
- *
- * Заголовок наш: в самой форме его нет, а окно без единой надписи над
- * полями выглядит так, будто открылось по ошибке.
+ * Высоту задаём мы: содержимое рамки чужое, его высоту со страницы не
+ * узнать. Форма растягивается на всю высоту рамки и прижимает кнопку
+ * «Отправить» к низу (замер 23.10.2026: при 400px всё помещается без
+ * прокрутки, при 900px между полями и кнопкой пустота). 460 — с запасом
+ * на строки ошибок под полями. На низком экране рамка ужимается по окну
+ * (минус отступы, шапка и запасная ссылка), а форма прокручивается сама.
  */
-.qbox-title {
-  margin: 0 0 16px;
-  padding-right: 44px; /* место под крестик */
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--ink);
-}
-
 .qbox-frame {
   display: block;
   width: 100%;
-  height: clamp(420px, 68svh, 620px);
+  height: min(460px, calc(100svh - 48px - 57px - 52px));
+  min-height: 360px;
   border: 0;
-  border-radius: 12px;
   background: var(--surface);
 }
 
-/* Запасная ссылка под рамкой — см. Landing.tsx. Цель под палец 44px. */
+/*
+ * Запасная ссылка под рамкой — единственная защита, если встраивание
+ * заблокирует сам сайт КТ: окно тогда пустое, а узнать это со страницы
+ * нельзя. Мелко и внизу, чтобы не спорить с формой. Цель под палец 44px.
+ */
 .qbox-fallback {
-  margin: 6px 0 -10px;
-  font-size: 13px;
+  margin: 0;
+  padding: 0 16px 4px;
+  font-size: 12.5px;
   line-height: 1.4;
   text-align: center;
   color: var(--ink-muted);
@@ -1492,29 +1535,6 @@ html {
   color: var(--brand-strong);
   font-weight: 700;
 }
-
-/*
- * Крестик 44×44, а не 40: это норма для целей под палец в проекте, и здесь
- * она особенно важна. С тех пор как в окне лежит чужая рамка, Esc его не
- * закрывает — события клавиатуры остаются внутри формы Qbox и до нас не
- * доходят. Крестик и клик по затемнению остались единственными способами
- * выйти, и промахиваться по ним человек не должен.
- */
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--ink-muted);
-  cursor: pointer;
-}
-.modal-close:hover { background: var(--bg); color: var(--ink); }
 
 /* Заголовок формы не должен налезать на крестик */
 .leadform h2 { padding-right: 44px; }
