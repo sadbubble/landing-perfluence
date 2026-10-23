@@ -37,12 +37,9 @@ const attribution = captureAttribution();
 /**
  * Форма Qbox открывается рамкой прямо на странице — человек с лендинга
  * не уходит, и параметры в адресной строке не мелькают. Здесь лежат её
- * адреса, пока окно открыто; null — окно закрыто.
- *
- * embed — для рамки, direct — та же форма с теми же менеджером, тарифом и
- * языком для запасной ссылки «Откройте её отдельно» под рамкой.
+ * адрес и заголовок окна, пока окно открыто; null — окно закрыто.
  */
-const form = ref<{ embed: string; direct: string; title: string } | null>(null);
+const form = ref<{ embed: string; title: string } | null>(null);
 
 /**
  * Открыть форму Qbox.
@@ -64,7 +61,6 @@ function goToForm(product: string | null, title: string) {
   if (canEmbedForm()) {
     form.value = {
       embed: buildEmbedUrl(product, manager, lang.value),
-      direct: buildFormUrl(product, manager, lang.value),
       title,
     };
     return;
@@ -226,20 +222,18 @@ function scrollToTariffs() {
         проверить, не ломает ли он отрисовку формы, мы не можем: содержимое
         чужой рамки нам не видно. Домен доверенный — свой же у заказчика.
       -->
+      <!-- Как заголовок формы в окнах КТ. Наш, потому что у нашей формы в
+           Qbox заголовок не показывается. -->
+      <p class="qbox-lead">{{ c.formLead }}</p>
       <iframe v-if="form" class="qbox-frame" :src="form.embed" :title="form.title" />
       <!--
-        Запасной выход, если рамка не загрузилась. Встраивание может
-        запретить не только Qbox, но и сам сайт, на котором лежит лендинг
-        (политика безопасности telecom.kz, адрес www.telecom.kz вместо
-        telecom.kz). Окно при этом выглядит рабочим, а заявку отправить
-        нельзя, и узнать об этом со страницы мы не можем: содержимое
-        чужой рамки нам не видно. Ссылка ведёт на ту же форму на сайте
-        Qbox — заявка доедет с тем же менеджером и тарифом.
+        Запасной ссылки «Форма не загрузилась? Откройте её отдельно» здесь
+        больше нет — убрана по слову заказчика (23.10.2026). Если форма в
+        рамке не загрузится (сайт запретит встраивание, браузер запретит
+        форме хранить данные), у человека остаётся только крестик. Вернуть:
+        buildFormUrl() даёт тот же адрес без embed=true, разметка — в
+        истории git (коммит ac8c4c7).
       -->
-      <p v-if="form" class="qbox-fallback">
-        {{ c.formFallbackLead }}
-        <a :href="form.direct" target="_blank" rel="noopener">{{ c.formFallbackLink }}</a>
-      </p>
     </ModalDialog>
 
     <SiteFooter :company="c.footerCompany" :partner-badge="c.partnerBadge" />

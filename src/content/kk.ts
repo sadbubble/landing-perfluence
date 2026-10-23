@@ -335,8 +335,7 @@ export const content = {
   ctaButton: "Өтінім қалдыру",
   closeLabel: "Жабу",
   formTitle: "Өтінім қалдыру",
-  formFallbackLead: "Форма жүктелмеді ме?",
-  formFallbackLink: "Оны бөлек ашыңыз",
+  formLead: "Өтінім қалдырыңыз. Сізге менеджеріміз хабарласатын болады",
   formSubtitle:
     "Форманы толтырыңыз — біз сізбен хабарласып, қосылуды рәсімдейміз.",
   labelPhone: "Ұялы телефон нөмірі",

@@ -1421,13 +1421,15 @@ html {
  * Qbox без отступов вокруг. Фон страницы затемнён и размыт.
  */
 .modal-backdrop {
+  /* Отступ окна от краёв экрана; на телефоне меньше — форме нужно 400px */
+  --modal-gap: 24px;
   position: fixed;
   inset: 0;
   z-index: 100;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 24px 16px;
+  padding: var(--modal-gap) 16px;
   overflow-y: auto;
   background: rgba(10, 37, 64, 0.45);
   -webkit-backdrop-filter: blur(6px);
@@ -1435,6 +1437,9 @@ html {
   animation: modal-fade 0.16s ease-out;
 }
 @keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 480px) {
+  .modal-backdrop { --modal-gap: 12px; padding-inline: 12px; }
+}
 
 .modal-panel {
   position: relative;
@@ -1501,39 +1506,33 @@ html {
  * Высоту задаём мы: содержимое рамки чужое, его высоту со страницы не
  * узнать. Форма растягивается на всю высоту рамки и прижимает кнопку
  * «Отправить» к низу (замер 23.10.2026: при 400px всё помещается без
- * прокрутки, при 900px между полями и кнопкой пустота). 460 — с запасом
+ * прокрутки, при 900px между полями и кнопкой пустота). 440 — с запасом
  * на строки ошибок под полями. На низком экране рамка ужимается по окну
- * (минус отступы, шапка и запасная ссылка), а форма прокручивается сама.
+ * (минус отступы сверху и снизу, шапка 57 и текст над формой — до трёх
+ * строк на телефоне, 84), а форма прокручивается сама. На 320×568 так
+ * остаётся ровно 400.
  */
 .qbox-frame {
   display: block;
   width: 100%;
-  height: min(460px, calc(100svh - 48px - 57px - 52px));
+  height: min(440px, calc(100svh - 2 * var(--modal-gap, 24px) - 57px - 84px));
   min-height: 360px;
   border: 0;
   background: var(--surface);
 }
 
 /*
- * Запасная ссылка под рамкой — единственная защита, если встраивание
- * заблокирует сам сайт КТ: окно тогда пустое, а узнать это со страницы
- * нельзя. Мелко и внизу, чтобы не спорить с формой. Цель под палец 44px.
+ * «Оставьте заявку. Наш менеджер скоро с вами свяжется» над формой — как
+ * заголовок формы в окнах на сайте КТ. Отступ слева совпадает с полями
+ * формы Qbox (20px), чтобы текст и поля стояли по одной линии.
  */
-.qbox-fallback {
+.qbox-lead {
   margin: 0;
-  padding: 0 16px 4px;
-  font-size: 12.5px;
-  line-height: 1.4;
-  text-align: center;
-  color: var(--ink-muted);
-}
-.qbox-fallback a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 4px;
-  color: var(--brand-strong);
+  padding: 16px 20px 0;
+  font-size: 16px;
   font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
 }
 
 /* Заголовок формы не должен налезать на крестик */
