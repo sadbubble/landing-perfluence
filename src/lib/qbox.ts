@@ -143,19 +143,54 @@ export function resolveProduct(sel: TariffSelection): string | null {
  * frame-ancestors, и браузер блокирует рамку на любом домене вне его. Здесь
  * перечислены только те адреса, на которых может оказаться этот лендинг.
  *
- * Боевой адрес из ТЗ п.5 — partner.telecom.kz — в списке Qbox уже есть,
- * просить их ни о чём не пришлось. А витрина на Vercel там отсутствует:
- * на ней встраивание не заработает, и включится запасной переход.
+ * Список — копия заголовка Qbox целиком, снятая 23 октября 2026:
+ *
+ *     curl -sI https://qbox.telecom.kz/forms/ | grep -i frame-ancestors
+ *
+ * Целиком, а не только «наши» адреса: раньше здесь было пять доменов, и
+ * когда Qbox добавил тестовые стенды КТ (staging-srv-0, staging-customer),
+ * лендинг на стенде продолжал уводить на сайт Qbox вместо окна — заказчик
+ * принял это за поломку. Если Qbox снова поменяет список — снять заголовок
+ * той же командой и заменить. Лишний домен здесь безвреден, недостающий
+ * превращает окно в переход.
+ *
+ * Чего в списке нет: витрины на Vercel (там форма откроется переходом,
+ * пока Qbox её не добавит) и www.telecom.kz — но он переадресует на
+ * telecom.kz, так что до страницы с www дело не доходит.
  *
  * localhost:8080 — порт разработки, из-за этого списка и выбранный;
  * подробности в vite.config.ts.
  */
-const EMBED_ALLOWED_ORIGINS = [
-  "https://partner.telecom.kz",
+export const EMBED_ALLOWED_ORIGINS = [
+  // Боевой сайт и тестовые стенды Казахтелекома
   "https://telecom.kz",
+  "https://staging-srv-0.telecom.kz",
+  "https://staging-customer.telecom.kz",
+  "https://partner.telecom.kz",
+  // Разработка
   "http://localhost:8080",
   "http://localhost:4200",
   "http://localhost:4502",
+  // Остальные сайты из списка Qbox — не наши, но лендинг может оказаться
+  // на любом поддомене КТ, и список проще держать равным оригиналу.
+  "https://qbox-test-embedded-form.tilda.ws",
+  "https://idhost.telecom.kz",
+  "https://b2b.telecom.kz",
+  "https://test-b2b.telecom.kz",
+  "https://docs.telecom.kz",
+  "https://link.telecom.kz",
+  "https://markirovka.telecom.kz",
+  "https://tanba.telecom.kz",
+  "https://docs.i-smet.kz",
+  "https://docs.ismet.kz",
+  "https://ismet.kz",
+  "https://www.ismet.kz",
+  "https://link.ismet.kz",
+  "https://markirovka.i-smet.kz",
+  "https://markirovka.ismet.kz",
+  "https://partner.i-smet.kz",
+  "https://partner.ismet.kz",
+  "https://test.i-smet.kz",
 ];
 
 /** Можно ли показать форму рамкой прямо на странице. */
