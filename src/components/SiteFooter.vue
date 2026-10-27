@@ -7,9 +7,9 @@
  * заказчика). Прежний вид с плашкой и разбор её контраста —
  * _archive/footer-v1/.
  *
- * Условия Back to School и лицензии — тексты заказчика дословно. Оферта
- * без адреса показывается текстом: ссылку на несуществующую страницу
- * ставить хуже, чем не ставить никакой.
+ * Условия Back to School и лицензии — тексты заказчика дословно. Оферта —
+ * PDF на сайте КТ, ссылкой только само слово «оферта»; без адреса строка
+ * показывается текстом.
  */
 defineProps<{
   company: string;
@@ -20,7 +20,10 @@ defineProps<{
     btsItems: string[];
     licensesTitle: string;
     licenses: string[];
-    offer: string;
+    /** «Ознакомьтесь с условиями публичной » + «оферты» (ссылка) + «» */
+    offerBefore: string;
+    offerLink: string;
+    offerAfter: string;
     offerUrl: string | null;
     aiNote: string;
     copyright: string;
@@ -54,8 +57,11 @@ defineProps<{
       </div>
 
       <div class="footer-bottom">
-        <a v-if="info.offerUrl" :href="info.offerUrl" target="_blank" rel="noopener">{{ info.offer }}</a>
-        <span v-else>{{ info.offer }}</span>
+        <!-- Ссылкой только слово «оферта» (слово заказчика); без адреса —
+             вся строка текстом. -->
+        <span>{{ info.offerBefore
+          }}<a v-if="info.offerUrl" :href="info.offerUrl" target="_blank" rel="noopener">{{ info.offerLink }}</a
+          ><template v-else>{{ info.offerLink }}</template>{{ info.offerAfter }}</span>
         <span>{{ info.aiNote }}</span>
         <span>{{ info.copyright }}</span>
       </div>

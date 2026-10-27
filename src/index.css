@@ -1604,7 +1604,18 @@ html {
   padding-top: 20px;
   border-top: 1px solid color-mix(in srgb, var(--footer-ink) 14%, transparent);
 }
+/*
+ * Ссылка — одно слово «оферта» внутри строки. Область нажатия расширена
+ * до 44px по высоте отступами, а отрицательные поля возвращают строку на
+ * место: текст не сдвигается, а пальцем по слову не промахнуться.
+ */
 .footer-bottom a {
+  /* поверх соседней строки, на которую заходит расширенная область */
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 14px 2px;
+  margin: -14px -2px;
   color: var(--footer-ink);
   text-decoration: underline;
   text-underline-offset: 3px;
