@@ -1279,7 +1279,8 @@ html {
  * два резких стыка подряд, и переход выглядел грязно.
  */
 .how {
-  padding: 72px 20px 88px;
+  /* Низ маленький: воздух до нижнего баннера задаёт сам баннер (--cta-gap) */
+  padding: 72px 20px 24px;
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--surface) 75%, transparent) 0%,
@@ -1308,9 +1309,15 @@ html {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  /* Сверху крупный воздух: баннер должен читаться как отдельный блок,
-     а не как продолжение предыдущей секции. */
-  margin: clamp(56px, 8vw, 96px) 20px 64px;
+  /*
+   * Воздух сверху и снизу одинаковый — от последнего текста «Как
+   * подключить» до баннера и от баннера до подвала. Раньше сверху было
+   * 184px (88 отступа секции + 96 баннера), снизу 64 — баннер выглядел
+   * прижатым к подвалу (заказчик, 27.10.2026). 24px сверху — низ секции
+   * .how, поэтому здесь на 24 меньше.
+   */
+  --cta-gap: clamp(48px, 6vw, 80px);
+  margin: calc(var(--cta-gap) - 24px) 20px var(--cta-gap);
   padding: clamp(28px, 3.5vw, 38px) clamp(24px, 5vw, 56px);
   border-radius: 28px;
   /*
