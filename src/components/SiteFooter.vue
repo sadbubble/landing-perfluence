@@ -1,80 +1,63 @@
 <script setup lang="ts">
+/**
+ * Подвал: компания и официальное партнёрство, условия, лицензии, оферта.
+ *
+ * «Официальный партнёр АО «Казахтелеком»» (ТЗ п.3) — с 27.10.2026 не
+ * плашкой, а тем же белым жирным текстом рядом с «ТОО «Perfluence»» (слово
+ * заказчика). Прежний вид с плашкой и разбор её контраста —
+ * _archive/footer-v1/.
+ *
+ * Условия Back to School и лицензии — тексты заказчика дословно. Оферта
+ * без адреса показывается текстом: ссылку на несуществующую страницу
+ * ставить хуже, чем не ставить никакой.
+ */
 defineProps<{
   company: string;
   partnerBadge: string;
+  info: {
+    rent: string;
+    btsTitle: string;
+    btsItems: string[];
+    licensesTitle: string;
+    licenses: string[];
+    offer: string;
+    offerUrl: string | null;
+    aiNote: string;
+    copyright: string;
+  };
 }>();
 </script>
 
 <template>
-  <footer
-    :style="{
-      background: 'var(--footer-bg)',
-      color: 'color-mix(in srgb, var(--footer-ink) 55%, transparent)',
-      padding: '40px 20px',
-    }"
-  >
-    <div
-      class="footer-inner"
-      :style="{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-      }"
-    >
-      <div class="footer-left" :style="{ display: 'flex', flexDirection: 'column', gap: '8px' }">
-        <span :style="{ color: 'var(--footer-ink)', fontWeight: 700, fontSize: '16px' }">
-          {{ company }}
-        </span>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-company">{{ company }}</span>
+        <span class="footer-partner">{{ partnerBadge }}</span>
+      </div>
 
-        <!--
-          Обязательная плашка об официальном партнёрстве (ТЗ п.3).
+      <p class="footer-rent">{{ info.rent }}</p>
 
-          Текст здесь --brand-light, а не основной --brand, хотя вокруг
-          всё синее. Причина в замере: собственная подложка плашки
-          (--brand 15% поверх подвала) осветляет фон до #08345C, и на нём
-          --brand #008EFF даёт 3.81 при норме 4.5 — кегль 11px, послаблений
-          для крупного текста тут не полагается. Обиднее всего, что без
-          подложки тот же цвет проходит (4.67): её и не хватило.
+      <div class="footer-cols">
+        <section>
+          <h3 class="footer-h">{{ info.btsTitle }}</h3>
+          <ul class="footer-list">
+            <li v-for="t in info.btsItems" :key="t">{{ t }}</li>
+          </ul>
+        </section>
+        <section>
+          <h3 class="footer-h">{{ info.licensesTitle }}</h3>
+          <ul class="footer-list">
+            <li v-for="t in info.licenses" :key="t">{{ t }}</li>
+          </ul>
+        </section>
+      </div>
 
-          --brand-light #00D9FF на том же фоне даёт 7.47. Цвет из гайда
-          заказчика («доп синий для градиента»), новых оттенков не заведено.
-
-          Подложка намеренно осталась на --brand: она должна быть холоднее
-          текста, иначе контраст просядет снова.
-        -->
-        <div
-          :style="{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'color-mix(in srgb, var(--brand) 15%, transparent)',
-            border: '1px solid color-mix(in srgb, var(--brand-light) 30%, transparent)',
-            borderRadius: '6px',
-            padding: '4px 10px',
-            alignSelf: 'flex-start',
-          }"
-        >
-          <div
-            :style="{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: 'var(--brand-light)',
-            }"
-          />
-          <span
-            :style="{
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--brand-light)',
-              letterSpacing: '0.2px',
-            }"
-          >
-            {{ partnerBadge }}
-          </span>
-        </div>
+      <div class="footer-bottom">
+        <a v-if="info.offerUrl" :href="info.offerUrl" target="_blank" rel="noopener">{{ info.offer }}</a>
+        <span v-else>{{ info.offer }}</span>
+        <span>{{ info.aiNote }}</span>
+        <span>{{ info.copyright }}</span>
       </div>
     </div>
   </footer>

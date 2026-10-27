@@ -236,6 +236,20 @@ function scrollToTariffs() {
       -->
     </ModalDialog>
 
-    <SiteFooter :company="c.footerCompany" :partner-badge="c.partnerBadge" />
+    <SiteFooter
+      :company="c.footerCompany"
+      :partner-badge="c.partnerBadge"
+      :info="{
+        rent: c.footerRent,
+        btsTitle: c.footerBtsTitle,
+        btsItems: c.footerBtsItems,
+        licensesTitle: c.footerLicensesTitle,
+        licenses: c.footerLicenses,
+        offer: c.footerOffer,
+        offerUrl: c.footerOfferUrl,
+        aiNote: c.footerAiNote,
+        copyright: c.footerCopyright,
+      }"
+    />
   </div>
 </template>
