@@ -90,7 +90,7 @@ export const content = {
       // Только с контрактом на год. Делит карточку с Keremet TV 2026 (group):
       // «С контрактом» в ней — PROMO, «Без контракта» — TV 2026.
       price: {
-        contract: "5 699",
+        contract: "5 190",
         noContract: null,
         contractLabel: "Контракт на 1 год",
         extra: ["Акционная цена действует 1 год"],

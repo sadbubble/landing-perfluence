@@ -86,7 +86,7 @@ export const content = {
         { icon: "tv", title: "ТВ", summary: "160+ арна · 7 онлайн-кинотеатр", facts: [], details: [] },
       ],
       price: {
-        contract: "5 699",
+        contract: "5 190",
         noContract: null,
         contractLabel: "1 жылға келісімшарт",
         extra: ["Акция бағасы 1 жыл бойы жарамды"],
